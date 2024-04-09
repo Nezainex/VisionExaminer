@@ -1,0 +1,129 @@
+<resources>
+    <string name="app_name">TestApp13</string>
+
+    <string name="second_act_button_str">Транспозиция</string>
+    <string name="third_act_button_str">Острота зрения и аметропии</string>
+    <string name="fourth_act_button_str">Тест ССГ на основе опросника OSDI (Ocular Surface Desease Index)</string>
+    <string name="fifth_act_button_str">Расчет оптической силы контактных линз</string>
+
+    <string name="toggle_theme">Сменить тему</string>
+    <string name="light_theme">светлая тема</string>
+    <string name="dark_theme">тёмная тема</string>
+    <string name="theme_toggle_description">Сменить тему</string>
+
+    <string name="transposition_text">Введите данные для транспозиции</string>
+    <string name="ODTextRes">Рефракция OD</string>
+    <string name="OSTextRes">Рефракция OS</string>
+    <string name="sphODinput"> </string>
+    <string name="cylODinput"> </string>
+    <string name="axODinput"> </string>
+    <string name="sphOSinput"> </string>
+    <string name="cylOSinput"> </string>
+    <string name="axOSinput"> </string>
+
+    <string name="sphResult">sph 0.00</string>
+    <string name="cylResult">cyl 0.00</string>
+    <string name="axResult">ax 0°</string>
+    <string name="OD_Transposition_Results">Транспозиция OD</string>
+    <string name="OS_Transposition_Results">Транспозиция OS</string>
+
+    <string name="OD_Transpose_Button">Transpose OD</string>
+    <string name="OS_Transpose_Button">Transpose OS</string>
+
+    <string name="clearButton">Очистить</string>
+    <string name="saveButton">Сохранить</string>
+
+    <string name="back_to_menu_button">Назад в меню</string>
+
+    <string name="no_text"> </string>
+    <string name="age_text_view">Возраст</string>
+
+    <string name="gender_text_view">Пол</string>
+
+    <string name="btnNext">Далее</string>
+
+    <string name="visOD">Vis OD</string>
+    <string name="visOU">Vis OU</string>
+    <string name="visOS">Vis OS</string>
+
+    <string name="visOUgl">Vis OU в/о</string>
+    <string name="visODgl">Vis OD в/о</string>
+    <string name="visOSgl">Vis OS в/о</string>
+
+    <string name="visOUcorr">Vis OU корр.</string>
+    <string name="visODcorr">Vis OD корр.</string>
+    <string name="visOScorr">Vis OS корр.</string>
+
+    <string name="oculus_dexter">OD</string>
+    <string name="oculus_sinister">OS</string>
+    <string name="oculus_dexter_midr">OD</string>
+    <string name="oculus_sinister_midr">OS</string>
+
+    <string name="sphOD">sph</string>
+    <string name="cylOD">cyl</string>
+    <string name="axOD">ax</string>
+
+    <string name="sphOS">sph</string>
+    <string name="cylOS">cyl</string>
+    <string name="axOS">ax</string>
+
+    <string name="sphODmidr">sph</string>
+    <string name="cylODmidr">cyl</string>
+    <string name="axODmidr">ax</string>
+
+    <string name="sphOSmidr">sph</string>
+    <string name="cylOSmidr">cyl</string>
+    <string name="axOSmidr">ax</string>
+    <string name="nextbutton">Далее</string>
+    <string name="buttonAlways">Всегда</string>
+    <string name="buttonMostofthetime">Большую часть времени</string>
+    <string name="buttonHalftime">Примерно половину указанного времени</string>
+    <string name="buttonSometimes">Иногда</string>
+    <string name="buttonNever">Никогда</string>
+    <string name="buttonCantTell">Затрудняюсь ответить</string>
+    <string name="buttonReset">Пройти заново</string>
+
+    <string name="new_profile">Новый профиль</string>
+    <string name="load_profile">Загрузить профиль</string>
+    <string name="last_name_text_view">фамилия\n</string>
+    <string name="first_name_text_view">имя</string>
+    <string name="middle_name_text_view">отчество</string>
+    <string name="date_text_view">дата осмотра</string>
+
+    <string name="patients_list_text_View">Список пациентов</string>
+    <string name="delete_button_text">Удалить</string>
+    <string name="Search">Поиск</string>
+
+    <string name="sph">sph</string>
+    <string name="cyl">cyl</string>
+    <string name="ax">ax</string>
+    <string name="finish_Test_Button">Завершить</string>
+
+    <string-array name="gender_array">
+        <item>Мужской</item>
+        <item>Женский</item>
+    </string-array>
+
+    <string-array name="midriaticAgentArray">
+        <item>мидриатик не применялся</item>
+        <item>тропикамид 1%</item>
+        <item>тропикамид 0,5%</item>
+        <item>мидриацил 1%</item>
+        <item>мидриацил 0,5%</item>
+        <item>цикломед 1%</item>
+        <item>циклопентолат 1%</item>
+        <item>циклоптик 1%</item>
+        <item>атропин 1%</item>
+        <item>атропинсульфат 1%</item>
+        <item>ирифрин 2,5%</item>
+        <item>ирифрин БК 2,5%</item>
+        <item>тропикамид 2,5%</item>
+        <item>мидримакс 2,5%</item>
+        <item>фенилэфрин 2,5%</item>
+    </string-array>
+
+    <string name="sixth_act_button_str">Тест цветоощущения Рабкина</string>
+    <string name="textViewQuestionrabkin">Что изображено на рисунке?</string>
+
+
+</resources>

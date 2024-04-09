@@ -1,0 +1,751 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SecondActivity">
+
+    <View
+        android:id="@+id/bottom_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_placeholder">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/gender_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gender_text_view"
+                android:textSize="20sp" />
+
+            <Spinner
+                android:id="@+id/gender_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:entries="@array/gender_array"
+                android:spinnerMode="dialog"
+                android:textSize="20sp" />
+
+            </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewAge"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:text="@string/age_text_view"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/age_edit_text"
+                android:layout_width="80dp"
+                android:layout_height="50dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/no_text"
+                android:inputType="numberDecimal"
+                android:textColorHint="#757575"
+                android:textSize="20sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <TextView
+                android:id="@+id/agetransform_text_View"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_text"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/last_name_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:text="@string/last_name_text_view"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/last_name_edit_text"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/no_text"
+                android:inputType="text"
+                android:textColorHint="#757575"
+                android:textSize="20sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/first_name_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:text="@string/first_name_text_view"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/first_name_edit_text"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/no_text"
+                android:inputType="text"
+                android:textColorHint="#757575"
+                android:textSize="20sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/middle_name_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:text="@string/middle_name_text_view"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/middle_name_edit_text"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/no_text"
+                android:inputType="text"
+                android:textColorHint="#757575"
+                android:textSize="20sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/date_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date_text_view"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/date_edit_text"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/no_text"
+                android:inputType="date"
+                android:textColorHint="#757575"
+                android:textSize="20sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+        </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/visODtextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/visOD"
+                    android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/visODinput"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/no_text"
+                android:inputType="numberDecimal"
+                android:textColorHint="#757575"
+                android:textSize="20sp"
+                tools:ignore="SpeakableTextPresentCheck"  />
+
+            <TextView
+                android:id="@+id/vistransformtextViewOD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_text"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/visOStextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/visOS"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/visOSinput"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/no_text"
+                android:inputType="numberDecimal"
+                android:textColorHint="#757575"
+                android:textSize="20sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <TextView
+                android:id="@+id/vistransformtextViewOS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_text"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/visOUtextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/visOU"
+                android:textSize="20sp" />
+
+
+            <EditText
+                android:id="@+id/visOUinput"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/no_text"
+                android:inputType="numberDecimal"
+                android:textColorHint="#757575"
+                android:textSize="20sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <TextView
+                android:id="@+id/vistransformtextViewOU"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_text"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <TextView
+                android:id="@+id/visODcorrtextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/visODcorr"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/visODcorrinput"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/no_text"
+                android:inputType="numberDecimal"
+                android:textColorHint="#757575"
+                android:textSize="20sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <TextView
+                android:id="@+id/vistransformtextViewODcorr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_text"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/visOScorrtextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/visOScorr"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/visOScorrinput"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/no_text"
+                android:inputType="numberDecimal"
+                android:textColorHint="#757575"
+                android:textSize="20sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <TextView
+                android:id="@+id/vistransformtextViewOScorr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_text"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/visOUcorrtextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/visOUcorr"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/visOUcorrinput"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:hint="@string/no_text"
+                    android:inputType="numberDecimal"
+                    android:textColorHint="#757575"
+                    android:textSize="20sp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/vistransformtextViewOUcorr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_text"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+           <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/refractionOD_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ODTextRes"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/OD_Transposition_Results"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="130dp"
+                android:text="@string/OD_Transposition_Results"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sph"
+                    android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/sphODinput"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:autofillHints=""
+                android:inputType="number|numberDecimal|numberSigned"
+                android:text="@string/sphODinput"
+                android:textSize="20sp"
+                tools:ignore="LabelFor,TouchTargetSizeCheck,DuplicateSpeakableTextCheck,SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cyl"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/cylODinput"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:autofillHints=""
+                    android:inputType="number|numberDecimal|numberSigned"
+                    android:text="@string/cylODinput"
+                    android:textSize="20sp"
+                    tools:ignore="LabelFor,TouchTargetSizeCheck,DuplicateSpeakableTextCheck,SpeakableTextPresentCheck"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ax"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/axODinput"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:autofillHints=""
+                    android:inputType="number"
+                    android:text="@string/axODinput"
+                    android:textSize="20sp"
+                    tools:ignore="LabelFor,TouchTargetSizeCheck,DuplicateSpeakableTextCheck,SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/sphOD_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/sphResult"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/cylOD_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/cylResult"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/axOD_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/axResult"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewsphOD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_text"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textViewcylOD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_text"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textViewaxOD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_text"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/refractionOS_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/OSTextRes"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/OS_Transposition_Results"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="130dp"
+                android:text="@string/OS_Transposition_Results"
+                android:textSize="20sp" />
+
+
+        </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sph"
+                    android:textSize="20sp" />
+
+                <EditText
+                android:id="@+id/sphOSinput"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:autofillHints=""
+                android:inputType="number|numberDecimal|numberSigned"
+                android:text="@string/sphOSinput"
+                android:textSize="20sp"
+                tools:ignore="LabelFor,TouchTargetSizeCheck,DuplicateSpeakableTextCheck,SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cyl"
+                    android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/cylOSinput"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:autofillHints=""
+                android:inputType="number|numberDecimal|numberSigned"
+                android:text="@string/cylOSinput"
+                android:textSize="20sp"
+                tools:ignore="LabelFor,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ax"
+                    android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/axOSinput"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:autofillHints=""
+                android:inputType="number"
+                android:text="@string/axOSinput"
+                android:textSize="20sp"
+                tools:ignore="LabelFor,TouchTargetSizeCheck,DuplicateSpeakableTextCheck,SpeakableTextPresentCheck" />
+
+                    <TextView
+                        android:id="@+id/sphOS_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="@string/sphResult"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/cylOS_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="@string/cylResult"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/axOS_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="@string/axResult"
+                        android:textSize="20sp" />
+
+
+                </LinearLayout>
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewsphOS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_text"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textViewcylOS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_text"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/textViewaxOS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_text"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+            <TextView
+                android:id="@+id/comparesphtextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_text"
+                android:textSize="20sp" />
+
+
+
+            <Button
+                android:id="@+id/fourth_act_button"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:text="@string/fourth_act_button_str"
+                android:textSize="20sp" />
+
+
+            <TextView
+                android:id="@+id/osdi_result_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_text"
+                android:textSize="20sp" />
+
+
+
+
+            <Button
+                android:id="@+id/sixth_act_button"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:text="@string/sixth_act_button_str"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/rabkin_result_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_text"
+                android:textSize="20sp" />
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/midriaticAgentSelect"
+                    android:layout_width="220dp"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/midriaticAgentArray"
+                    android:spinnerMode="dialog"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/midrtextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:orientation="horizontal">
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+
+                <Button
+                    android:id="@+id/buttonsave"
+                    android:layout_width="160dp"
+                    android:layout_height="80sp"
+                    android:text="@string/saveButton"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/buttonclear"
+                    android:layout_width="160dp"
+                    android:layout_height="80sp"
+                    android:layout_marginStart="170dp"
+                    android:text="@string/clearButton"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
+

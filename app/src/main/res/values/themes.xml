@@ -1,0 +1,10 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.TestApp13" parent="Theme.Material3.DayNight.NoActionBar">
+
+    </style>
+    <style name="Theme.TestApp13" parent="Base.Theme.TestApp13" />
+</resources>
+
+
+
