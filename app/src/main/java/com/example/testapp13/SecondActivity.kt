@@ -75,12 +75,15 @@ class SecondActivity : AppCompatActivity() {
 
     private var osdiResult: OsdiResult? = null
     private var rabkinResult: RabkinResult? = null
+    private var ishiharaResult: IshiharaResult? = null
 
     private val startOsdiTestRequestCode= 1
     private val startRabkinTestRequestCode = 2
+    private val startIshiharaTestRequestCode = 3
 
     private lateinit var osdiResultTextView: TextView
     private lateinit var rabkinResultTextView: TextView
+    private lateinit var ishiharaResultTextView: TextView
 
     private val startOsdiForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
@@ -99,7 +102,17 @@ class SecondActivity : AppCompatActivity() {
                 rabkinResultTextView.text = "Результат Rabkin: ${it.resultText} (Баллы: ${it.score})"
         }
     }
+}
+private val startIshiharaForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    if (result.resultCode == RESULT_OK) {
+        ishiharaResult = result.data?.getParcelableExtra("ishiharaResult")
+        ishiharaResult?.let {
+            val ishiharaResultTextView: TextView = findViewById(R.id.ishihara_result_text_view)
+            ishiharaResultTextView.text = "Результат Ishihara: ${it.resultText} (Баллы: ${it.score})"
+        }
     }
+}
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
@@ -160,6 +173,7 @@ class SecondActivity : AppCompatActivity() {
 
         osdiResultTextView = findViewById(R.id.osdi_result_text_view)
         rabkinResultTextView = findViewById(R.id.rabkin_result_text_view)
+        ishiharaResultTextView = findViewById(R.id.ishihara_result_text_view)
 
         savebutton = findViewById(R.id.buttonsave)
         clearbutton = findViewById(R.id.buttonclear)
@@ -311,6 +325,11 @@ class SecondActivity : AppCompatActivity() {
             val intent = Intent(this, SixthActivity::class.java)
             startRabkinForResult.launch(intent) // Запуск SixthActivity с startRabkinForResult
         }
+        val seventhActbutton = findViewById<Button>(R.id.seventh_act_button)
+        seventhActbutton.setOnClickListener {
+            val intent = Intent(this, SeventhActivity::class.java)
+            startIshiharaForResult.launch(intent) // Запуск SeventhActivity с startIshiharaForResult
+        }
 
         // Обработчик нажатия кнопки "Clear"
         clearbutton.setOnClickListener {
@@ -381,6 +400,13 @@ class SecondActivity : AppCompatActivity() {
                     rabkinResult?.let {
                         val rabkinResultTextView: TextView = findViewById(R.id.rabkin_result_text_view)
                         rabkinResultTextView.text = "Результат Rabkin: ${it.resultText} (Баллы: ${it.score})"
+                    }
+                }
+                startIshiharaTestRequestCode -> {
+                    ishiharaResult = data?.getParcelableExtra("ishiharaResult")
+                    ishiharaResult?.let {
+                        val ishiharaResultTextView: TextView = findViewById(R.id.ishihara_result_text_view)
+                        ishiharaResultTextView.text = "Результат Ishihara: ${it.resultText} (Баллы: ${it.score})"
                     }
                 }
             }
@@ -459,6 +485,10 @@ class SecondActivity : AppCompatActivity() {
             rabkinResult?.let {
                 it.patientProfileId = profileId.toInt()
                 database.patientProfileDao().insertRabkinResult(it)
+            }
+            ishiharaResult?.let {
+                it.patientProfileId = profileId.toInt()
+                database.patientProfileDao().insertIshiharaResult(it)
             }
         }
 

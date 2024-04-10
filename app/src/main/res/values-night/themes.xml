@@ -2,5 +2,6 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.TestApp13" parent="Theme.Material3.DayNight.NoActionBar">
 
+        
     </style>
 </resources>

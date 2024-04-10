@@ -30,6 +30,13 @@ interface PatientProfileDao {
 
     @Query("SELECT * FROM rabkin_results WHERE patientProfileId = :profileId")
     fun getrabkinResultsForProfile(profileId: Int): Flow<List<RabkinResult>> // Возвращаем Flow<List<rabkinResult>>
+
+    // Методы для работы с ishiharaResult
+    @Insert
+    suspend fun insertIshiharaResult(result: IshiharaResult)
+
+    @Query("SELECT * FROM ishihara_results WHERE patientProfileId = :profileId")
+    fun getishiharaResultsForProfile(profileId: Int): Flow<List<IshiharaResult>> // Возвращаем Flow<List<ishiharaResult>>
 }
 
 

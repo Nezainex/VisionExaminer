@@ -124,6 +124,7 @@
 
     <string name="sixth_act_button_str">Тест цветоощущения Рабкина</string>
     <string name="textViewQuestionrabkin">Что изображено на рисунке?</string>
+    <string name="seventh_act_button_text">Тест цветоощущения Ишихара</string>
 
 
 </resources>

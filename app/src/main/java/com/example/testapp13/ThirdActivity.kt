@@ -83,12 +83,24 @@ class ThirdActivity : AppCompatActivity() {
         val rabkinScore = intent.getIntExtra("rabkinScore", 0)
         val rabkinResultTextView: TextView = findViewById(R.id.rabkin_result_text_view)
 
-
         rabkinResultTextView.text = rabkinResultText
         rabkinResultTextView.text = "$rabkinResultText (Score: $rabkinScore)"
         val rabkinResultFromIntent = intent.getParcelableExtra<RabkinResult>("rabkinResult")
         if (rabkinResultFromIntent != null) {
             rabkinResultTextView.text = "Результат Rabkin: ${rabkinResultFromIntent.resultText} (Баллы: ${rabkinResultFromIntent.score})"
+        } else {
+            // ... (обработка случая, когда rabkinResultFromIntent null)
+        }
+
+        val ishiharaResultText = intent.getStringExtra("ishiharaResultText")
+        val ishiharaScore = intent.getIntExtra("ishiharaScore", 0)
+        val ishiharaResultTextView: TextView = findViewById(R.id.ishihara_result_text_view)
+
+        ishiharaResultTextView.text = ishiharaResultText
+        ishiharaResultTextView.text = "$ishiharaResultText (Score: $ishiharaScore)"
+        val ishiharaResultFromIntent = intent.getParcelableExtra<IshiharaResult>("ishiharaResult")
+        if (ishiharaResultFromIntent != null) {
+            ishiharaResultTextView.text = "Результат Ishihara: ${ishiharaResultFromIntent.resultText} (Баллы: ${ishiharaResultFromIntent.score})"
         } else {
             // ... (обработка случая, когда rabkinResultFromIntent null)
         }
@@ -100,10 +112,12 @@ class ThirdActivity : AppCompatActivity() {
                 // Launch coroutines asynchronously
                 val osdiResultsDeferred = async { database.patientProfileDao().getOsdiResultsForProfile(profile.id).first() }
                 val rabkinResultsDeferred = async { database.patientProfileDao().getrabkinResultsForProfile(profile.id).first() }
+                val ishiharaResultsDeferred = async { database.patientProfileDao().getishiharaResultsForProfile(profile.id).first() }
 
                 // Await results
                 val osdiResults = osdiResultsDeferred.await()
                 val rabkinResults = rabkinResultsDeferred.await()
+                val ishiharaResults = ishiharaResultsDeferred.await()
 
                 // Update UI with results
                 if (osdiResults.isNotEmpty()) {
@@ -118,6 +132,12 @@ class ThirdActivity : AppCompatActivity() {
                     rabkinResultTextView.text = "Результат Rabkin: ${rabkinResult.resultText} (Баллы: ${rabkinResult.score})"
                 } else {
                     rabkinResultTextView.text = "Результаты Rabkin отсутствуют"
+                }
+                if (ishiharaResults.isNotEmpty()) {
+                    val ishiharaResult = ishiharaResults[0]
+                    ishiharaResultTextView.text = "Результат Ishihara: ${ishiharaResult.resultText} (Баллы: ${ishiharaResult.score})"
+                } else {
+                    ishiharaResultTextView.text = "Результаты Ishihara отсутствуют"
                 }
             }
         } else {
@@ -208,6 +228,16 @@ class ThirdActivity : AppCompatActivity() {
                     rabkinResultTextView.text = "Результат rabkin: ${rabkinResult.resultText} (Баллы: ${rabkinResult.score})"
                 } else {
                     rabkinResultTextView.text = "Результаты rabkin отсутствуют"
+                }
+            }
+            lifecycleScope.launch {
+                val database = DatabaseInstance.getInstance(this@ThirdActivity)
+                val ishiharaResults = database.patientProfileDao().getishiharaResultsForProfile(profile.id).first()
+                if (ishiharaResults.isNotEmpty()) {
+                    val ishiharaResult = ishiharaResults[0] // Берем первый результат (предполагаем, что он один)
+                    ishiharaResultTextView.text = "Результат ishihara: ${ishiharaResult.resultText} (Баллы: ${ishiharaResult.score})"
+                } else {
+                    ishiharaResultTextView.text = "Результаты ishihara отсутствуют"
                 }
             }
         }

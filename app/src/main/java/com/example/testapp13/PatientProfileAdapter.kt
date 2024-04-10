@@ -72,6 +72,7 @@ class PatientProfileAdapter(
         notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private suspend fun deleteProfile(profile: PatientProfile) {
         profiles = profiles.filter { it.id != profile.id }
         notifyDataSetChanged()
