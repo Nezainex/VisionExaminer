@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.testapp13
 
 import android.annotation.SuppressLint
@@ -6,6 +8,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
+import android.view.KeyEvent
+import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -14,19 +20,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
-class SecondActivity : AppCompatActivity() {
+class SecondActivity : AppCompatActivity(),TextView.OnEditorActionListener, AdapterView.OnItemSelectedListener {
 
     private lateinit var genderSpinner: Spinner
-
+    private lateinit var birthDateEditText: EditText
     private lateinit var ageEditText: EditText
+    private lateinit var textViewAgeCalc: TextView
     private lateinit var agetransformtextView: TextView
+    private var lastKeyPressed = 0
 
     private lateinit var lastNameEditText: EditText
     private lateinit var firstNameEditText: EditText
     private lateinit var middleNameEditText: EditText
-    private lateinit var dateEditText: EditText
+    private lateinit var examinationdateEditText: EditText
 
     private lateinit var midriaticAgentSelect: Spinner
     private lateinit var midrtextView: TextView
@@ -85,15 +94,17 @@ class SecondActivity : AppCompatActivity() {
     private lateinit var rabkinResultTextView: TextView
     private lateinit var ishiharaResultTextView: TextView
 
+    @SuppressLint("SetTextI18n")
     private val startOsdiForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
-            osdiResult = result.data?.getParcelableExtra<OsdiResult>("osdiResult")
+            osdiResult = result.data?.getParcelableExtra("osdiResult")
             osdiResult?.let {
                 val osdiResultTextView: TextView = findViewById(R.id.osdi_result_text_view)
                 osdiResultTextView.text = "Результат OSDI: ${it.resultText} (Баллы: ${it.score})"
             }
         }
     }
+    @SuppressLint("SetTextI18n")
     private val startRabkinForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             rabkinResult = result.data?.getParcelableExtra("rabkinResult")
@@ -103,7 +114,8 @@ class SecondActivity : AppCompatActivity() {
         }
     }
 }
-private val startIshiharaForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    @SuppressLint("SetTextI18n")
+    private val startIshiharaForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
     if (result.resultCode == RESULT_OK) {
         ishiharaResult = result.data?.getParcelableExtra("ishiharaResult")
         ishiharaResult?.let {
@@ -121,14 +133,15 @@ private val startIshiharaForResult = registerForActivityResult(ActivityResultCon
 
         // Initialize views
         genderSpinner = findViewById(R.id.gender_spinner)
-
+        birthDateEditText = findViewById(R.id.birthDate_edit_text)
         ageEditText = findViewById(R.id.age_edit_text)
+        textViewAgeCalc = findViewById(R.id.textViewAgeCalc)
         agetransformtextView = findViewById(R.id.agetransform_text_View)
 
         lastNameEditText = findViewById(R.id.last_name_edit_text)
         firstNameEditText = findViewById(R.id.first_name_edit_text)
         middleNameEditText = findViewById(R.id.middle_name_edit_text)
-        dateEditText = findViewById(R.id.date_edit_text)
+        examinationdateEditText = findViewById(R.id.examination_date_edit_text)
 
         midriaticAgentSelect = findViewById(R.id.midriaticAgentSelect)
         midrtextView = findViewById(R.id.midrtextView)
@@ -195,48 +208,102 @@ private val startIshiharaForResult = registerForActivityResult(ActivityResultCon
         // Create a single TextWatcher instance
         val textWatcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                updateAgeDescription()
-                updateVisDescriptionOD()
-                updateVisDescriptionOS()
-                updateVisDescriptionOU()
-                updateVisDescriptionODcorr()
-                updateVisDescriptionOScorr()
-                updateVisDescriptionOUcorr()
-                updateSphDescriptionOD()
-                updateSphDescriptionOS()
-                updateComparesphText()
-                updateCylDescriptionOD()
-                updateCylDescriptionOS()
-                transposeOD()
-                transposeOS()
+                s?.let { text ->
+                    // Handle dot deletion on backspace
+                    if (text.isNotEmpty() && text.last() == '.' && lastKeyPressed == KeyEvent.KEYCODE_DEL) {
+                        text.delete(text.length - 2, text.length) // Delete dot and preceding character
+                    } else if (text.length == 2 || text.length == 5) {
+                        // Insert dots automatically
+                        if (!text.endsWith(".")) {
+                            text.append(".")
+                        }
+                    }
+
+                    // Validate date components
+                    val parts = text.split(".")
+                    if (parts.size == 3) {
+                        val day = parts[0].toIntOrNull()
+                        val month = parts[1].toIntOrNull()
+                        val year = parts[2].toIntOrNull()
+                        if (day !in 1..31 || month !in 1..12) {
+                            // Дата некорректная, можно показать сообщение об ошибке
+                        }
+                    }
+                }
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val changedView = currentFocus // Get the view that was just edited
+                Log.d("TextWatcher", "onTextChanged called for view: ${changedView?.id}") // Add logging
+                when (changedView?.id) {
+                    R.id.birthDate_edit_text -> { // Birth date input changed
+                        updateAgeDescription() // This will now calculate age from birth date
+                        updateVisDescription()
+                        updateVisDescriptioncorr()
+                        updateSphDescription()
+                        updateComparesphText()
+                        updateCylDescription()
+                        transposeOD()
+                        transposeOS()
+                    }
+                    R.id.age_edit_text -> { // Manual age input changed
+                        updateAgeDescription()
+                        updateVisDescription()
+                        updateVisDescriptioncorr()
+                        updateSphDescription()
+                        updateComparesphText()
+                        updateCylDescription()
+                        transposeOD()
+                        transposeOS()
+                    }
+                }
+            }
         }
 
-        // Set up date picker dialog
-        val calendar = Calendar.getInstance()
-        val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-            calendar.set(Calendar.YEAR, year)
-            calendar.set(Calendar.MONTH, month)
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-            dateEditText.setText(dateFormat.format(calendar.time))
+
+
+        // Set up examination date picker dialog
+        val examinationcalendar = Calendar.getInstance()
+        val examinationdateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+            examinationcalendar.set(Calendar.YEAR, year)
+            examinationcalendar.set(Calendar.MONTH, month)
+            examinationcalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            val examinationdateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+            examinationdateEditText.setText(examinationdateFormat.format(examinationcalendar.time))
         }
 
-        dateEditText.setOnClickListener {
+        examinationdateEditText.setOnClickListener {
             DatePickerDialog(
                 this,
-                dateSetListener,
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
+                examinationdateSetListener,
+                examinationcalendar.get(Calendar.YEAR),
+                examinationcalendar.get(Calendar.MONTH),
+                examinationcalendar.get(Calendar.DAY_OF_MONTH)
+            ).show()
+        }
+        val birthcalendar = Calendar.getInstance()
+        val birthDateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+            birthcalendar.set(Calendar.YEAR, year)
+            birthcalendar.set(Calendar.MONTH, month)
+            birthcalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+            birthDateEditText.setText(dateFormat.format(birthcalendar.time))
+        }
+
+        birthDateEditText.setOnClickListener {
+            DatePickerDialog(
+                this,
+                birthDateSetListener,
+                birthcalendar.get(Calendar.YEAR),
+                birthcalendar.get(Calendar.MONTH),
+                birthcalendar.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
 
         savebutton.setOnClickListener {
             // Get data from input fields
+            val birthDate = birthDateEditText.text.toString()
             val lastName = lastNameEditText.text.toString()
             val firstName = firstNameEditText.text.toString()
             val middleName = middleNameEditText.text.toString()
@@ -248,8 +315,7 @@ private val startIshiharaForResult = registerForActivityResult(ActivityResultCon
             } catch (e: Exception) {
                 0.0
             }
-            val date = dateEditText.text.toString()
-
+            val examinationdate = examinationdateEditText.text.toString()
             // Get data from visual acuity fields
             val visOD = visODinput.text.toString().toDoubleOrNull() ?: 0.0
             val visOS = visOSinput.text.toString().toDoubleOrNull() ?: 0.0
@@ -281,12 +347,13 @@ private val startIshiharaForResult = registerForActivityResult(ActivityResultCon
 
             // Create a PatientProfile object
             val newProfile = PatientProfile(
+                birthDate = birthDate,
                 lastName = lastName,
                 firstName = firstName,
                 middleName = middleName,
                 gender = gender,
                 age = age,
-                date = date,
+                examinationdate = examinationdate,
                 visOD = visOD,
                 visOS = visOS,
                 visOU = visOU,
@@ -334,11 +401,12 @@ private val startIshiharaForResult = registerForActivityResult(ActivityResultCon
         // Обработчик нажатия кнопки "Clear"
         clearbutton.setOnClickListener {
             // Очистка текстовых полей
+            birthDateEditText.text.clear()
             ageEditText.text.clear()
             lastNameEditText.text.clear()
             firstNameEditText.text.clear()
             middleNameEditText.text.clear()
-            dateEditText.text.clear()
+            examinationdateEditText.text.clear()
 
             visODinput.text.clear()
             visOSinput.text.clear()
@@ -364,8 +432,11 @@ private val startIshiharaForResult = registerForActivityResult(ActivityResultCon
             midriaticAgentSelect.setSelection(0)
 
         }
+        genderSpinner.onItemSelectedListener = this
         // Attach the TextWatcher to all relevant input fields
+        birthDateEditText.addTextChangedListener(textWatcher)
         ageEditText.addTextChangedListener(textWatcher)
+        examinationdateEditText.addTextChangedListener(textWatcher)
         visODinput.addTextChangedListener(textWatcher)
         visOSinput.addTextChangedListener(textWatcher)
         visOUinput.addTextChangedListener(textWatcher)
@@ -380,6 +451,25 @@ private val startIshiharaForResult = registerForActivityResult(ActivityResultCon
         sphOSinput.addTextChangedListener(textWatcher)
         cylOSinput.addTextChangedListener(textWatcher)
         axOSinput.addTextChangedListener(textWatcher)
+
+        birthDateEditText.setOnEditorActionListener(this)
+        ageEditText.setOnEditorActionListener(this)
+        lastNameEditText.setOnEditorActionListener(this)
+        firstNameEditText.setOnEditorActionListener(this)
+        middleNameEditText.setOnEditorActionListener(this)
+        examinationdateEditText.setOnEditorActionListener(this)
+        visODinput.setOnEditorActionListener(this)
+        visOSinput.setOnEditorActionListener(this)
+        visOUinput.setOnEditorActionListener(this)
+        visODcorrinput.setOnEditorActionListener(this)
+        visOScorrinput.setOnEditorActionListener(this)
+        visOUcorrinput.setOnEditorActionListener(this)
+        sphODinput.setOnEditorActionListener(this)
+        cylODinput.setOnEditorActionListener(this)
+        axODinput.setOnEditorActionListener(this)
+        sphOSinput.setOnEditorActionListener(this)
+        cylOSinput.setOnEditorActionListener(this)
+        axOSinput.setOnEditorActionListener(this)
 
     }
 
@@ -495,104 +585,131 @@ private val startIshiharaForResult = registerForActivityResult(ActivityResultCon
         Toast.makeText(this, "Профиль сохранен", Toast.LENGTH_SHORT).show()
 
 
+
         val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra("profileId", profile.id) // Передача ID профиля
+        intent.putExtra("profileId", profile.id)
+        intent.putExtra("birthDate", profile.birthDate)
         startActivity(intent)
+
+    }
+
+    private fun calculateAgeFromBirthDate(): Double {
+        Log.d("BirthDateCalc", "calculateAgeFromBirthDate() called")
+        val birthDateString = birthDateEditText.text.toString()
+        Log.d("BirthDateCalc", "Birth date string: $birthDateString")
+        if (birthDateString.isBlank()) {
+            Log.d("BirthDateCalc", "Birth date string is blank, returning 0.0")
+            return 0.0 // Return 0 if no date
+        }
+        val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+        val birthDate = try {
+            dateFormat.parse(birthDateString)
+        } catch (e: Exception) {
+            Log.w("BirthDateCalc", "Error parsing birth date", e)
+            null
+        }
+
+        birthDate?.let {
+            Log.d("BirthDateCalc", "Parsed birth date: $birthDate")
+            val today = Calendar.getInstance().time
+            Log.d("BirthDateCalc", "Today's date: $today")
+            val diffInMillis = abs(today.time - birthDate.time)
+            val diffInDays = TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS)
+            Log.d("BirthDateCalc", "Difference in days: $diffInDays")
+            val age = diffInDays / 365.25
+            Log.d("BirthDateCalc", "Calculated age: $age")
+            return age
+        }
+        Log.d("BirthDateCalc", "Birth date parsing failed, returning 0.0")
+        return 0.0 // Return 0 if parsing failed
     }
 
     // Обработчик изменения текста в поле ввода ageEditText
     private fun updateAgeDescription() {
-        val age = try { ageEditText.text.toString().toDouble() } catch (e: Exception) { 0.0 }
+        Log.d("AgeDescription", "updateAgeDescription() called") // Log function entry
+        val ageFromInput = try {
+            ageEditText.text.toString().toDouble()
+        } catch (e: Exception) {
+            Log.w("AgeDescription", "Error parsing age input", e) // Log parsing error
+            0.0
+        }
+        val ageFromBirthDate = calculateAgeFromBirthDate()
+        Log.d("AgeDescription", "Age from birth date: $ageFromBirthDate") // Log calculated age
+        val age = if (ageFromInput > 0.0) ageFromInput else ageFromBirthDate
         val isMale = genderSpinner.selectedItem.toString() == "Мужской"
         agetransformtextView.text = ageTransform(age, isMale)
-    }
-    // Обработчик изменения текста в поле ввода visODinput
-    private fun updateVisDescriptionOD() {
-        val vis = try { visODinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        val age = try { ageEditText.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        vistransformtextViewOD.text = visTransformOD(vis, age)
-    }
-    // Обработчик изменения текста в поле ввода visOSinput
-    private fun updateVisDescriptionOS() {
-        val vis = try { visOSinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        val age = try { ageEditText.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        vistransformtextViewOS.text = visTransformOS(vis, age)
-    }
-    // Обработчик изменения текста в поле ввода visOUinput
-    private fun updateVisDescriptionOU() {
-        val vis = try { visOUinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        val age = try { ageEditText.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        vistransformtextViewOU.text = visTransformOU(vis, age)
-    }
-    // Обработчик изменения текста в поле ввода visODcorrinput
-    private fun updateVisDescriptionODcorr() {
-        val vis = try { visODcorrinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        val age = try { ageEditText.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        vistransformtextViewODcorr.text = visTransformODcorr(vis, age)
-    }
-    // Обработчик изменения текста в поле ввода visOScorrinput
-    private fun updateVisDescriptionOScorr() {
-        val vis = try { visOScorrinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        val age = try { ageEditText.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        vistransformtextViewOScorr.text = visTransformOScorr(vis, age)
-    }
-    // Обработчик изменения текста в поле ввода visOUcorrinput
-    private fun updateVisDescriptionOUcorr() {
-        val vis = try { visOUcorrinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        val age = try { ageEditText.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        vistransformtextViewOUcorr.text = visTransformOUcorr(vis, age)
-    }
-    // Обработчик изменения текста в поле ввода sphODinput
-    private fun updateSphDescriptionOD() {
-        val sphOD = try { sphODinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        val age = if (ageEditText.text.toString().isNotEmpty()) {
-            try { ageEditText.text.toString().toDouble() } catch (e: Exception) { 0.0 }
+        // Update textViewAgeCalc if age is calculated from birth date
+        if (ageFromInput == 0.0 && ageFromBirthDate > 0.0) {
+            textViewAgeCalc.text = String.format("%.2f", ageFromBirthDate) // Display calculated age
         } else {
-            0.0
+            textViewAgeCalc.text = "" // Clear the TextView
         }
-        textViewsphOD.text = sphCalculateOD(sphOD, age)
-    }
-    // Обработчик изменения текста в поле ввода sphOSinput
-    private fun updateSphDescriptionOS() {
-        val sphOS = try { sphOSinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        val age = if (ageEditText.text.toString().isNotEmpty()) {
-            try { ageEditText.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        } else {
-            0.0
-        }
-        textViewsphOS.text = sphCalculateOS(sphOS, age)
     }
 
-    // Обработчик изменения текста в поле ввода cylODinput
-    private fun updateCylDescriptionOD() {
-        val cylOD = try { cylODinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        textViewcylOD.text = cylCalculateOD(cylOD)
+    // Обработчик изменения текста в полях ввода vis ODinput, vis OSinput, vis OUinput
+    private fun updateVisDescription() {
+        val ageFromInput = try { ageEditText.text.toString().toDouble() } catch (e: Exception) { 0.0 }
+        val ageFromBirthDate = calculateAgeFromBirthDate()
+        val age = if (ageFromInput > 0.0) ageFromInput else ageFromBirthDate // Use input age if available
+            // OD
+        val visOD = try { visODinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
+        vistransformtextViewOD.text = visTransform(visOD, age, textViewAgeCalc)
+            // OS
+        val visOS = try { visOSinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
+        vistransformtextViewOS.text = visTransform(visOS, age, textViewAgeCalc)
+            // OU
+        val visOU = try { visOUinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
+        vistransformtextViewOU.text = visTransform(visOU, age, textViewAgeCalc)
     }
-    // Обработчик изменения текста в поле ввода cylOSinput
-    private fun updateCylDescriptionOS() {
+    // Обработчик изменения текста в полях ввода vis ODcorrinput, vis OScorrinput, vis OUcorrinput
+    private fun updateVisDescriptioncorr() {
+        val ageFromInput = try { ageEditText.text.toString().toDouble() } catch (e: Exception) { 0.0 }
+        val ageFromBirthDate = calculateAgeFromBirthDate()
+        val age = if (ageFromInput > 0.0) ageFromInput else ageFromBirthDate // Use input age if available
+        // OD
+        val visODcorr = try { visODcorrinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
+        vistransformtextViewODcorr.text = visTransform(visODcorr, age, textViewAgeCalc)
+        // OS
+        val visOScorr = try { visOScorrinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
+        vistransformtextViewOScorr.text = visTransform(visOScorr, age, textViewAgeCalc)
+        // OU
+        val visOUcorr = try { visOUcorrinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
+        vistransformtextViewOUcorr.text = visTransform(visOUcorr, age, textViewAgeCalc)
+    }
+    // Обработчик изменения текста в поле ввода sphODinput
+    private fun updateSphDescription() {
+        val ageFromInput = try { ageEditText.text.toString().toDouble() } catch (e: Exception) { 0.0 }
+        val ageFromBirthDate = calculateAgeFromBirthDate()
+        val age = if (ageFromInput > 0.0) ageFromInput else ageFromBirthDate
+        // OD
+        val sphOD = try { sphODinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
+        textViewsphOD.text = sphCalculate(sphOD, age, "OD")
+        // OS
+        val sphOS = try { sphOSinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
+        textViewsphOS.text = sphCalculate(sphOS, age, "OS")
+    }
+
+
+    // Обработчик изменения текста в поле ввода cylODinput
+    private fun updateCylDescription() {
+        // OD
+        val cylOD = try { cylODinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
+        textViewcylOD.text = cylCalculate(cylOD, "OD")
+        // OS
         val cylOS = try { cylOSinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        textViewcylOS.text = cylCalculateOS(cylOS)
+        textViewcylOS.text = cylCalculate(cylOS, "OS")
     }
 
     // Функция, определяющая степень миопии/гиперметропии, в зависимости от данных sph для OD
     private fun updateComparesphText() {
-        val sphODinput = try {
-            sphODinput.text.toString().toDouble()
-        } catch (e: NumberFormatException) {
-            0.0
-        }
-
-        val sphOSinput = try {
-            sphOSinput.text.toString().toDouble()
-        } catch (e: NumberFormatException) {
-            0.0
-        }
+        val sphODinput = try { sphODinput.text.toString().toDouble() } catch (e: NumberFormatException) { 0.0 }
+        val sphOSinput = try { sphOSinput.text.toString().toDouble() } catch (e: NumberFormatException) { 0.0 }
         comparesph(sphODinput, sphOSinput, comparesphtextView)
     }
 
     companion object {
-        fun sphCalculateOD(sphOD: Double, age: Double = 0.0): String {
-            if (sphOD == 0.0) return "OD эмметропия"
+        fun sphCalculate(sph: Double, age: Double = 0.0, eye: String): String {
+            if (sph == 0.0) return "$eye эмметропия" // Изменено для включения глаза
             val correction = when {
                 age > 0 && age < 0.5 -> 3.6
                 age >= 0.5 && age < 1 -> 2.6
@@ -610,73 +727,28 @@ private val startIshiharaForResult = registerForActivityResult(ActivityResultCon
                 else -> 0.0
             }
 
-            if (sphOD >= -0.74 + correction && sphOD <= 0.74 + correction) return "OD эмметропия"
+            if (sph >= -0.74 + correction && sph <= 0.74 + correction) return "$eye эмметропия"
             return when {
-                sphOD <= -0.75 + correction && sphOD > -3.25 + correction -> "OD миопия \n слабой степени"
-                sphOD <= -3.25 + correction && sphOD > -6.25 + correction -> "OD миопия \n средней степени"
-                sphOD <= -6.25 + correction -> "OD миопия \n высокой степени"
-                sphOD >= 0.75 + correction && sphOD < 2.5 + correction -> "OD гиперметропия \n слабой степени"
-                sphOD >= 2.5 + correction && sphOD < 5 + correction -> "OD гиперметропия \n средней степени"
-                sphOD >= 5 + correction -> "OD гиперметропия \n высокой степени"
-                else -> "OD некорректное \n значение sph"
+                sph <= -0.75 + correction && sph > -3.25 + correction -> "$eye миопия \n слабой степени"
+                sph <= -3.25 + correction && sph > -6.25 + correction -> "$eye миопия \n средней степени"
+                sph <= -6.25 + correction -> "$eye миопия \n высокой степени"
+                sph >= 0.75 + correction && sph < 2.5 + correction -> "$eye гиперметропия \n слабой степени"
+                sph >= 2.5 + correction && sph < 5 + correction -> "$eye гиперметропия \n средней степени"
+                sph >= 5 + correction -> "$eye гиперметропия \n высокой степени"
+                else -> "$eye некорректное \n значение sph"
             }
         }
 
-    // Функция, определяющая степень миопии/гиперметропии, в зависимости от данных sph для OS
-        fun sphCalculateOS(sphOS: Double, age: Double = 0.0): String {
-            if (sphOS == 0.0) return "OS эмметропия"
-            val correction = when {
-                age > 0 && age < 0.5 -> 3.6
-                age >= 0.5 && age < 1 -> 2.6
-                age >= 1 && age < 2 -> 1.9
-                age >= 2 && age < 3 -> 1.4
-                age >= 3 && age < 4 -> 1.3
-                age >= 4 && age < 5 -> 1.1
-                age >= 5 && age < 6 -> 1.0
-                age >= 6 && age < 8 -> 0.7
-                age >= 8 && age < 9 -> 0.6
-                age >= 9 && age < 10 -> -0.01
-                age >= 10 && age < 11 -> -0.2
-                age >= 11 && age < 12 -> -0.3
-                age >= 12 && age < 14 -> -0.4
-                else -> 0.0
-            }
-            if (sphOS >= -0.74 + correction && sphOS <= 0.74 + correction) return "OS эмметропия"
+        // Функция, определяющая степень астигматизма, в зависимости от данных cyl
+        fun cylCalculate(cyl: Double, eye: String): String {
+            if (cyl == 0.0) return ""
+            if (cyl >= -0.74 && cyl <= 0.74) return ""
             return when {
-                sphOS <= -0.75 + correction && sphOS > -3.25 + correction -> "OS миопия \n слабой степени"
-                sphOS <= -3.25 + correction && sphOS > -6.25 + correction -> "OS миопия \n средней степени"
-                sphOS <= -6.25 + correction -> "OS миопия \n высокой степени"
-                sphOS >= 0.75 + correction && sphOS < 2.5 + correction -> "OS гиперметропия \n слабой степени"
-                sphOS >= 2.5 + correction && sphOS < 5 + correction -> "OS гиперметропия \n средней степени"
-                sphOS >= 5 + correction -> "OS гиперметропия \n высокой степени"
-                else -> "OS некорректное \n значение sph"
+                (cyl <= -0.75 && cyl > -3) || (cyl >= 0.75 && cyl < 3) -> "$eye астигматизм \n слабой степени"
+                (cyl <= -3 && cyl > -6) || (cyl >= 3 && cyl < 6) -> "$eye астигматизм \n средней степени"
+                cyl <= -6 || cyl >= 6 -> "$eye астигматизм \n высокой степени"
+                else -> "$eye некорректное \n значение cyl"
             }
-        }
-
-        // Функция, определяющая степень астигматизма, в зависимости от данных cyl для OD
-        fun cylCalculateOD(cylOD: Double): String {
-            if (cylOD == 0.0) return ""
-            if (cylOD >= -0.74 && cylOD <= 0.74 ) return ""
-            return if ((cylOD <= -0.75 && cylOD > -3 ) || (cylOD >= 0.75 && cylOD < 3 )) {
-                "OD астигматизм \n слабой степени"
-            } else if ((cylOD <= -3 && cylOD > -6 ) || (cylOD >= 3 && cylOD < 6 )) {
-                "OD астигматизм \n средней степени"
-            } else if (cylOD <=-6 || cylOD >= 6) {
-                "OD астигматизм \n высокой степени"
-            } else "OD некорректное \n значение cyl"
-        }
-
-        // Функция, определяющая степень астигматизма, в зависимости от данных cyl для OS
-        fun cylCalculateOS(cylOS: Double): String {
-            if (cylOS == 0.0) return ""
-            if (cylOS >= -0.74 && cylOS <= 0.74 ) return ""
-            return if ((cylOS <= -0.75 && cylOS > -3 ) || (cylOS >= 0.75 && cylOS < 3 )) {
-                "OS астигматизм \n слабой степени"
-            } else if ((cylOS <= -3 && cylOS > -6 ) || (cylOS >= 3 && cylOS < 6 )) {
-                "OS астигматизм \n средней степени"
-            } else if (cylOS <=-6 || cylOS >= 6) {
-                "OS астигматизм \n высокой степени"
-            } else "OS некорректное \n значение cyl"
         }
         // Функция рассчёта возраста
         fun ageTransform(age: Double, isMale: Boolean): String {
@@ -689,9 +761,9 @@ private val startIshiharaForResult = registerForActivityResult(ActivityResultCon
                 return "(Раннее детство)"
             } else if (age >= 3 && age < 6 ) {
                 return "(Дошкольный возраст)"
-            } else if ((age >= 6 && age < 12 && isMale) || (age >= 6 && age < 10 && !isMale)) {
+            } else if ((age >= 6 && age < 12 && isMale) || (age >= 6 && age < 10)) {
                 return "(Младший школьный возраст)"
-            } else if ((age >= 12 && age < 18 && isMale) || (age >= 10 && age < 18 && !isMale)) {
+            } else if ((age >= 12 && age < 18 && isMale) || (age >= 10 && age < 18)) {
                 return "(Подростковый возраст)"
             } else if (age >= 18 && age < 35 ) {
                 return "(Взрослый возраст)"
@@ -706,36 +778,45 @@ private val startIshiharaForResult = registerForActivityResult(ActivityResultCon
             } else return "(Возраст неопределён)"
         }
 
-        // Функция рассчёта остроты зрения для OD
-        fun visTransformOD(vis: Double, age: Double): String {
-            if (age == 0.0 || vis == 0.0) return ""
+        // Функция рассчёта остроты зрения
+        fun visTransform(vis: Double, age: Double, textViewAgeCalc: TextView): String {
+            val ageFromTextView = try {
+                textViewAgeCalc.text.toString().toDouble()
+            } catch (e: Exception) {
+                0.0 // Default to 0 if textViewAgeCalc is empty or invalid
+            }
+
+            val finalAge = if (ageFromTextView > 0.0) ageFromTextView else age // Prioritize age from textViewAgeCalc
+
+            if (finalAge == 0.0 || vis == 0.0) return ""
+
             val normVis = when {
-                (0.0191781 <= age && age <= 0.0833334) && (0.002 <= vis && vis <= 0.02) -> "(Нормальная острота зрения)"
-                (0.0191781 <= age && age <= 0.0833334) && (vis > 0.02) -> "(Острота зрения выше нормы)"
-                (0.0833334 <= age && age <= 0.25) && (0.008 <= vis && vis <= 0.03) -> "(Нормальная острота зрения)"
-                (0.0833334 <= age && age <= 0.25) && (vis > 0.03) -> "(Острота зрения выше нормы)"
-                (0.25 <= age && age <= 0.5) && (0.05 <= vis && vis <= 0.1) -> "(Нормальная острота зрения)"
-                (0.25 <= age && age <= 0.5) && (vis > 0.1) -> "(Острота зрения выше нормы)"
-                (0.5 <= age && age <= 1) && (0.3 <= vis && vis <= 0.6) -> "(Нормальная острота зрения)"
-                (0.5 <= age && age <= 1) && (vis > 0.6) -> "(Острота зрения выше нормы)"
-                (1 <= age && age <= 2) && (0.3 <= vis && vis <= 0.6) -> "(Нормальная острота зрения)"
-                (1 <= age && age <= 2) && (vis > 0.6) -> "(Острота зрения выше нормы)"
-                (2 <= age && age <= 3) && (0.4 <= vis && vis <= 0.7) -> "(Нормальная острота зрения)"
-                (2 <= age && age <= 3) && (vis > 0.7) -> "(Острота зрения выше нормы)"
-                (3 <= age && age <= 4) && (0.6 <= vis && vis <= 0.9) -> "(Нормальная острота зрения)"
-                (3 <= age && age <= 4) && (vis > 0.9) -> "(Острота зрения выше нормы)"
-                (4 <= age && age <= 5) && (0.7 <= vis && vis <= 1.0) -> "(Нормальная острота зрения)"
-                (4 <= age && age <= 5) && (vis > 1.0) -> "(Острота зрения выше нормы)"
-                (5 <= age && age <= 7) && (0.8 <= vis && vis <= 1.0) -> "(Нормальная острота зрения)"
-                (5 <= age && age <= 7) && (vis > 1.0) -> "(Острота зрения выше нормы)"
-                (7 <= age && age <= 8) && (0.9 <= vis && vis <= 1.2) -> "(Нормальная острота зрения)"
-                (7 <= age && age <= 8) && (vis > 1.2) -> "(Острота зрения выше нормы)"
-                (8 <= age && age <= 15) && (0.9 <= vis && vis <= 1.5) -> "(Нормальная острота зрения)"
-                (8 <= age && age <= 15) && (vis > 1.5) -> "(Острота зрения выше нормы)"
-                (15 <= age && age < 18) && (1.0 <= vis && vis <= 1.5) -> "(Нормальная острота зрения)"
+                (age in 0.0191781..0.0833334) && (vis in 0.002..0.02) -> "(Нормальная острота зрения)"
+                (age in 0.0191781..0.0833334) && (vis > 0.02) -> "(Острота зрения выше нормы)"
+                (age in 0.0833334..0.25) && (vis in 0.008..0.03) -> "(Нормальная острота зрения)"
+                (age in 0.0833334..0.25) && (vis > 0.03) -> "(Острота зрения выше нормы)"
+                (age in 0.25..0.5) && (vis in 0.05..0.1) -> "(Нормальная острота зрения)"
+                (age in 0.25..0.5) && (vis > 0.1) -> "(Острота зрения выше нормы)"
+                (age in 0.5..1.0) && (vis in 0.3..0.6) -> "(Нормальная острота зрения)"
+                (age in 0.5..1.0) && (vis > 0.6) -> "(Острота зрения выше нормы)"
+                (age in 1.0..2.0) && (vis in 0.3..0.6) -> "(Нормальная острота зрения)"
+                (age in 1.0..2.0) && (vis > 0.6) -> "(Острота зрения выше нормы)"
+                (age in 2.0..3.0) && (vis in 0.4..0.7) -> "(Нормальная острота зрения)"
+                (age in 2.0..3.0) && (vis > 0.7) -> "(Острота зрения выше нормы)"
+                (age in 3.0..4.0) && (vis in 0.6..0.9) -> "(Нормальная острота зрения)"
+                (age in 3.0..4.0) && (vis > 0.9) -> "(Острота зрения выше нормы)"
+                (age in 4.0..5.0) && (vis in 0.7..1.0) -> "(Нормальная острота зрения)"
+                (age in 4.0..5.0) && (vis > 1.0) -> "(Острота зрения выше нормы)"
+                (age in 5.0..7.0) && (vis in 0.8..1.0) -> "(Нормальная острота зрения)"
+                (age in 5.0..7.0) && (vis > 1.0) -> "(Острота зрения выше нормы)"
+                (age in 7.0..8.0) && (vis in 0.9..1.2) -> "(Нормальная острота зрения)"
+                (age in 7.0..8.0) && (vis > 1.2) -> "(Острота зрения выше нормы)"
+                (age in 8.0..15.0) && (vis in 0.9..1.5) -> "(Нормальная острота зрения)"
+                (age in 8.0..15.0) && (vis > 1.5) -> "(Острота зрения выше нормы)"
+                (15 <= age && age < 18) && (vis in 1.0..1.5) -> "(Нормальная острота зрения)"
                 (15 <= age && age < 18) && (vis > 1.5) -> "(Острота зрения выше нормы)"
                 else -> when {
-                    age >= 18 && (1.0 <= vis && vis <= 1.5) -> "(Нормальная острота зрения)"
+                    age >= 18 && (vis in 1.0..1.5) -> "(Нормальная острота зрения)"
                     age >= 18 && (vis > 1.5) -> "(Острота зрения выше нормы)"
                     else -> "(Недостаточная острота зрения)"
                 }
@@ -744,108 +825,45 @@ private val startIshiharaForResult = registerForActivityResult(ActivityResultCon
         }
 
 
-        // Функция рассчёта остроты зрения для OS
-        fun visTransformOS(vis: Double, age: Double): String {
-            if (age == 0.0 || vis == 0.0) return ""
-            val normVis = when {
-                (0.0191781 <= age && age <= 0.0833334) && (0.002 <= vis && vis <= 0.02) -> "(Нормальная острота зрения)"
-                (0.0191781 <= age && age <= 0.0833334) && (vis > 0.02) -> "(Острота зрения выше нормы)"
-                (0.0833334 <= age && age <= 0.25) && (0.008 <= vis && vis <= 0.03) -> "(Нормальная острота зрения)"
-                (0.0833334 <= age && age <= 0.25) && (vis > 0.03) -> "(Острота зрения выше нормы)"
-                (0.25 <= age && age <= 0.5) && (0.05 <= vis && vis <= 0.1) -> "(Нормальная острота зрения)"
-                (0.25 <= age && age <= 0.5) && (vis > 0.1) -> "(Острота зрения выше нормы)"
-                (0.5 <= age && age <= 1) && (0.3 <= vis && vis <= 0.6) -> "(Нормальная острота зрения)"
-                (0.5 <= age && age <= 1) && (vis > 0.6) -> "(Острота зрения выше нормы)"
-                (1 <= age && age <= 2) && (0.3 <= vis && vis <= 0.6) -> "(Нормальная острота зрения)"
-                (1 <= age && age <= 2) && (vis > 0.6) -> "(Острота зрения выше нормы)"
-                (2 <= age && age <= 3) && (0.4 <= vis && vis <= 0.7) -> "(Нормальная острота зрения)"
-                (2 <= age && age <= 3) && (vis > 0.7) -> "(Острота зрения выше нормы)"
-                (3 <= age && age <= 4) && (0.6 <= vis && vis <= 0.9) -> "(Нормальная острота зрения)"
-                (3 <= age && age <= 4) && (vis > 0.9) -> "(Острота зрения выше нормы)"
-                (4 <= age && age <= 5) && (0.7 <= vis && vis <= 1.0) -> "(Нормальная острота зрения)"
-                (4 <= age && age <= 5) && (vis > 1.0) -> "(Острота зрения выше нормы)"
-                (5 <= age && age <= 7) && (0.8 <= vis && vis <= 1.0) -> "(Нормальная острота зрения)"
-                (5 <= age && age <= 7) && (vis > 1.0) -> "(Острота зрения выше нормы)"
-                (7 <= age && age <= 8) && (0.9 <= vis && vis <= 1.2) -> "(Нормальная острота зрения)"
-                (7 <= age && age <= 8) && (vis > 1.2) -> "(Острота зрения выше нормы)"
-                (8 <= age && age <= 15) && (0.9 <= vis && vis <= 1.5) -> "(Нормальная острота зрения)"
-                (8 <= age && age <= 15) && (vis > 1.5) -> "(Острота зрения выше нормы)"
-                (15 <= age && age < 18) && (1.0 <= vis && vis <= 1.5) -> "(Нормальная острота зрения)"
-                (15 <= age && age < 18) && (vis > 1.5) -> "(Острота зрения выше нормы)"
-                else -> when {
-                    age >= 18 && (1.0 <= vis && vis <= 1.5) -> "(Нормальная острота зрения)"
-                    age >= 18 && (vis > 1.5) -> "(Острота зрения выше нормы)"
-                    else -> "(Недостаточная острота зрения)"
-                }
+        // Функция рассчёта остроты зрения в коррекции
+        fun visTransformcorr(vis: Double, age: Double, textViewAgeCalc: TextView): String {
+            val ageFromTextView = try {
+                textViewAgeCalc.text.toString().toDouble()
+            } catch (e: Exception) {
+                0.0 // Default to 0 if textViewAgeCalc is empty or invalid
             }
-            return normVis
-        }
-        // Функция рассчёта остроты зрения для OU
-        fun visTransformOU(vis: Double, age: Double): String {
-            if (age == 0.0 || vis == 0.0) return ""
+
+            val finalAge = if (ageFromTextView > 0.0) ageFromTextView else age // Prioritize age from textViewAgeCalc
+
+            if (finalAge == 0.0 || vis == 0.0) return ""
+
             val normVis = when {
-                (0.0191781 <= age && age <= 0.0833334) && (0.002 <= vis && vis <= 0.02) -> "(Нормальная острота зрения)"
-                (0.0191781 <= age && age <= 0.0833334) && (vis > 0.02) -> "(Острота зрения выше нормы)"
-                (0.0833334 <= age && age <= 0.25) && (0.008 <= vis && vis <= 0.03) -> "(Нормальная острота зрения)"
-                (0.0833334 <= age && age <= 0.25) && (vis > 0.03) -> "(Острота зрения выше нормы)"
-                (0.25 <= age && age <= 0.5) && (0.05 <= vis && vis <= 0.1) -> "(Нормальная острота зрения)"
-                (0.25 <= age && age <= 0.5) && (vis > 0.1) -> "(Острота зрения выше нормы)"
-                (0.5 <= age && age <= 1) && (0.3 <= vis && vis <= 0.6) -> "(Нормальная острота зрения)"
-                (0.5 <= age && age <= 1) && (vis > 0.6) -> "(Острота зрения выше нормы)"
-                (1 <= age && age <= 2) && (0.3 <= vis && vis <= 0.6) -> "(Нормальная острота зрения)"
-                (1 <= age && age <= 2) && (vis > 0.6) -> "(Острота зрения выше нормы)"
-                (2 <= age && age <= 3) && (0.4 <= vis && vis <= 0.7) -> "(Нормальная острота зрения)"
-                (2 <= age && age <= 3) && (vis > 0.7) -> "(Острота зрения выше нормы)"
-                (3 <= age && age <= 4) && (0.6 <= vis && vis <= 0.9) -> "(Нормальная острота зрения)"
-                (3 <= age && age <= 4) && (vis > 0.9) -> "(Острота зрения выше нормы)"
-                (4 <= age && age <= 5) && (0.7 <= vis && vis <= 1.0) -> "(Нормальная острота зрения)"
-                (4 <= age && age <= 5) && (vis > 1.0) -> "(Острота зрения выше нормы)"
-                (5 <= age && age <= 7) && (0.8 <= vis && vis <= 1.0) -> "(Нормальная острота зрения)"
-                (5 <= age && age <= 7) && (vis > 1.0) -> "(Острота зрения выше нормы)"
-                (7 <= age && age <= 8) && (0.9 <= vis && vis <= 1.2) -> "(Нормальная острота зрения)"
-                (7 <= age && age <= 8) && (vis > 1.2) -> "(Острота зрения выше нормы)"
-                (8 <= age && age <= 15) && (0.9 <= vis && vis <= 1.5) -> "(Нормальная острота зрения)"
-                (8 <= age && age <= 15) && (vis > 1.5) -> "(Острота зрения выше нормы)"
-                (15 <= age && age < 18) && (1.0 <= vis && vis <= 1.5) -> "(Нормальная острота зрения)"
+                (age in 0.0191781..0.0833334) && (vis in 0.002..0.02) -> "(Нормальная острота зрения)"
+                (age in 0.0191781..0.0833334) && (vis > 0.02) -> "(Острота зрения выше нормы)"
+                (age in 0.0833334..0.25) && (vis in 0.008..0.03) -> "(Нормальная острота зрения)"
+                (age in 0.0833334..0.25) && (vis > 0.03) -> "(Острота зрения выше нормы)"
+                (age in 0.25..0.5) && (vis in 0.05..0.1) -> "(Нормальная острота зрения)"
+                (age in 0.25..0.5) && (vis > 0.1) -> "(Острота зрения выше нормы)"
+                (age in 0.5..1.0) && (vis in 0.3..0.6) -> "(Нормальная острота зрения)"
+                (age in 0.5..1.0) && (vis > 0.6) -> "(Острота зрения выше нормы)"
+                (age in 1.0..2.0) && (vis in 0.3..0.6) -> "(Нормальная острота зрения)"
+                (age in 1.0..2.0) && (vis > 0.6) -> "(Острота зрения выше нормы)"
+                (age in 2.0..3.0) && (vis in 0.4..0.7) -> "(Нормальная острота зрения)"
+                (age in 2.0..3.0) && (vis > 0.7) -> "(Острота зрения выше нормы)"
+                (age in 3.0..4.0) && (vis in 0.6..0.9) -> "(Нормальная острота зрения)"
+                (age in 3.0..4.0) && (vis > 0.9) -> "(Острота зрения выше нормы)"
+                (age in 4.0..5.0) && (vis in 0.7..1.0) -> "(Нормальная острота зрения)"
+                (age in 4.0..5.0) && (vis > 1.0) -> "(Острота зрения выше нормы)"
+                (age in 5.0..7.0) && (vis in 0.8..1.0) -> "(Нормальная острота зрения)"
+                (age in 5.0..7.0) && (vis > 1.0) -> "(Острота зрения выше нормы)"
+                (age in 7.0..8.0) && (vis in 0.9..1.2) -> "(Нормальная острота зрения)"
+                (age in 7.0..8.0) && (vis > 1.2) -> "(Острота зрения выше нормы)"
+                (age in 8.0..15.0) && (vis in 0.9..1.5) -> "(Нормальная острота зрения)"
+                (age in 8.0..15.0) && (vis > 1.5) -> "(Острота зрения выше нормы)"
+                (15 <= age && age < 18) && (vis in 1.0..1.5) -> "(Нормальная острота зрения)"
                 (15 <= age && age < 18) && (vis > 1.5) -> "(Острота зрения выше нормы)"
                 else -> when {
-                    age >= 18 && (1.0 <= vis && vis <= 1.5) -> "(Нормальная острота зрения)"
-                    age >= 18 && (vis > 1.5) -> "(Острота зрения выше нормы)"
-                    else -> "(Недостаточная острота зрения)"
-                }
-            }
-            return normVis
-        }
-        // Функция рассчёта остроты зрения для OD corr
-        fun visTransformODcorr(vis: Double, age: Double): String {
-            if (age == 0.0 || vis == 0.0) return ""
-            val normVis = when {
-                (0.0191781 <= age && age <= 0.0833334) && (0.002 <= vis && vis <= 0.02) -> "(Нормальная острота зрения)"
-                (0.0191781 <= age && age <= 0.0833334) && (vis > 0.02) -> "(Острота зрения выше нормы)"
-                (0.0833334 <= age && age <= 0.25) && (0.008 <= vis && vis <= 0.03) -> "(Нормальная острота зрения)"
-                (0.0833334 <= age && age <= 0.25) && (vis > 0.03) -> "(Острота зрения выше нормы)"
-                (0.25 <= age && age <= 0.5) && (0.05 <= vis && vis <= 0.1) -> "(Нормальная острота зрения)"
-                (0.25 <= age && age <= 0.5) && (vis > 0.1) -> "(Острота зрения выше нормы)"
-                (0.5 <= age && age <= 1) && (0.3 <= vis && vis <= 0.6) -> "(Нормальная острота зрения)"
-                (0.5 <= age && age <= 1) && (vis > 0.6) -> "(Острота зрения выше нормы)"
-                (1 <= age && age <= 2) && (0.3 <= vis && vis <= 0.6) -> "(Нормальная острота зрения)"
-                (1 <= age && age <= 2) && (vis > 0.6) -> "(Острота зрения выше нормы)"
-                (2 <= age && age <= 3) && (0.4 <= vis && vis <= 0.7) -> "(Нормальная острота зрения)"
-                (2 <= age && age <= 3) && (vis > 0.7) -> "(Острота зрения выше нормы)"
-                (3 <= age && age <= 4) && (0.6 <= vis && vis <= 0.9) -> "(Нормальная острота зрения)"
-                (3 <= age && age <= 4) && (vis > 0.9) -> "(Острота зрения выше нормы)"
-                (4 <= age && age <= 5) && (0.7 <= vis && vis <= 1.0) -> "(Нормальная острота зрения)"
-                (4 <= age && age <= 5) && (vis > 1.0) -> "(Острота зрения выше нормы)"
-                (5 <= age && age <= 7) && (0.8 <= vis && vis <= 1.0) -> "(Нормальная острота зрения)"
-                (5 <= age && age <= 7) && (vis > 1.0) -> "(Острота зрения выше нормы)"
-                (7 <= age && age <= 8) && (0.9 <= vis && vis <= 1.2) -> "(Нормальная острота зрения)"
-                (7 <= age && age <= 8) && (vis > 1.2) -> "(Острота зрения выше нормы)"
-                (8 <= age && age <= 15) && (0.9 <= vis && vis <= 1.5) -> "(Нормальная острота зрения)"
-                (8 <= age && age <= 15) && (vis > 1.5) -> "(Острота зрения выше нормы)"
-                (15 <= age && age < 18) && (1.0 <= vis && vis <= 1.5) -> "(Нормальная острота зрения)"
-                (15 <= age && age < 18) && (vis > 1.5) -> "(Острота зрения выше нормы)"
-                else -> when {
-                    age >= 18 && (1.0 <= vis && vis <= 1.5) -> "(Нормальная острота зрения)"
+                    age >= 18 && (vis in 1.0..1.5) -> "(Нормальная острота зрения)"
                     age >= 18 && (vis > 1.5) -> "(Острота зрения выше нормы)"
                     else -> "(Недостаточная острота зрения)"
                 }
@@ -853,78 +871,6 @@ private val startIshiharaForResult = registerForActivityResult(ActivityResultCon
             return normVis
         }
 
-        // Функция рассчёта остроты зрения для OS corr
-        fun visTransformOScorr(vis: Double, age: Double): String {
-            if (age == 0.0 || vis == 0.0) return ""
-            val normVis = when {
-                (0.0191781 <= age && age <= 0.0833334) && (0.002 <= vis && vis <= 0.02) -> "(Нормальная острота зрения)"
-                (0.0191781 <= age && age <= 0.0833334) && (vis > 0.02) -> "(Острота зрения выше нормы.)"
-                (0.0833334 <= age && age <= 0.25) && (0.008 <= vis && vis <= 0.03) -> "(Нормальная острота зрения)"
-                (0.0833334 <= age && age <= 0.25) && (vis > 0.03) -> "(Острота зрения выше нормы)"
-                (0.25 <= age && age <= 0.5) && (0.05 <= vis && vis <= 0.1) -> "(Нормальная острота зрения)"
-                (0.25 <= age && age <= 0.5) && (vis > 0.1) -> "(Острота зрения выше нормы)"
-                (0.5 <= age && age <= 1) && (0.3 <= vis && vis <= 0.6) -> "(Нормальная острота зрения)"
-                (0.5 <= age && age <= 1) && (vis > 0.6) -> "(Острота зрения выше нормы)"
-                (1 <= age && age <= 2) && (0.3 <= vis && vis <= 0.6) -> "(Нормальная острота зрения)"
-                (1 <= age && age <= 2) && (vis > 0.6) -> "(Острота зрения выше нормы)"
-                (2 <= age && age <= 3) && (0.4 <= vis && vis <= 0.7) -> "(Нормальная острота зрения)"
-                (2 <= age && age <= 3) && (vis > 0.7) -> "(Острота зрения выше нормы)"
-                (3 <= age && age <= 4) && (0.6 <= vis && vis <= 0.9) -> "(Нормальная острота зрения)"
-                (3 <= age && age <= 4) && (vis > 0.9) -> "(Острота зрения выше нормы)"
-                (4 <= age && age <= 5) && (0.7 <= vis && vis <= 1.0) -> "(Нормальная острота зрения)"
-                (4 <= age && age <= 5) && (vis > 1.0) -> "(Острота зрения выше нормы)"
-                (5 <= age && age <= 7) && (0.8 <= vis && vis <= 1.0) -> "(Нормальная острота зрения)"
-                (5 <= age && age <= 7) && (vis > 1.0) -> "(Острота зрения выше нормы)"
-                (7 <= age && age <= 8) && (0.9 <= vis && vis <= 1.2) -> "(Нормальная острота зрения)"
-                (7 <= age && age <= 8) && (vis > 1.2) -> "(Острота зрения выше нормы)"
-                (8 <= age && age <= 15) && (0.9 <= vis && vis <= 1.5) -> "(Нормальная острота зрения)"
-                (8 <= age && age <= 15) && (vis > 1.5) -> "(Острота зрения выше нормы)"
-                (15 <= age && age < 18) && (1.0 <= vis && vis <= 1.5) -> "(Нормальная острота зрения)"
-                (15 <= age && age < 18) && (vis > 1.5) -> "(Острота зрения выше нормы)"
-                else -> when {
-                    age >= 18 && (1.0 <= vis && vis <= 1.5) -> "(Нормальная острота зрения)"
-                    age >= 18 && (vis > 1.5) -> "(Острота зрения выше нормы)"
-                    else -> "(Недостаточная острота зрения)"
-                }
-            }
-            return normVis
-        }
-        // Функция рассчёта остроты зрения для OU corr
-        fun visTransformOUcorr(vis: Double, age: Double): String {
-            if (age == 0.0 || vis == 0.0) return ""
-            val normVis = when {
-                (0.0191781 <= age && age <= 0.0833334) && (0.002 <= vis && vis <= 0.02) -> "(Нормальная острота зрения)"
-                (0.0191781 <= age && age <= 0.0833334) && (vis > 0.02) -> "(Острота зрения выше нормы)"
-                (0.0833334 <= age && age <= 0.25) && (0.008 <= vis && vis <= 0.03) -> "(Нормальная острота зрения)"
-                (0.0833334 <= age && age <= 0.25) && (vis > 0.03) -> "(Острота зрения выше нормы)"
-                (0.25 <= age && age <= 0.5) && (0.05 <= vis && vis <= 0.1) -> "(Нормальная острота зрения)"
-                (0.25 <= age && age <= 0.5) && (vis > 0.1) -> "(Острота зрения выше нормы)"
-                (0.5 <= age && age <= 1) && (0.3 <= vis && vis <= 0.6) -> "(Нормальная острота зрения)"
-                (0.5 <= age && age <= 1) && (vis > 0.6) -> "(Острота зрения выше нормы)"
-                (1 <= age && age <= 2) && (0.3 <= vis && vis <= 0.6) -> "(Нормальная острота зрения)"
-                (1 <= age && age <= 2) && (vis > 0.6) -> "(Острота зрения выше нормы)"
-                (2 <= age && age <= 3) && (0.4 <= vis && vis <= 0.7) -> "(Нормальная острота зрения)"
-                (2 <= age && age <= 3) && (vis > 0.7) -> "(Острота зрения выше нормы)"
-                (3 <= age && age <= 4) && (0.6 <= vis && vis <= 0.9) -> "(Нормальная острота зрения)"
-                (3 <= age && age <= 4) && (vis > 0.9) -> "(Острота зрения выше нормы)"
-                (4 <= age && age <= 5) && (0.7 <= vis && vis <= 1.0) -> "(Нормальная острота зрения)"
-                (4 <= age && age <= 5) && (vis > 1.0) -> "(Острота зрения выше нормы)"
-                (5 <= age && age <= 7) && (0.8 <= vis && vis <= 1.0) -> "(Нормальная острота зрения)"
-                (5 <= age && age <= 7) && (vis > 1.0) -> "(Острота зрения выше нормы)"
-                (7 <= age && age <= 8) && (0.9 <= vis && vis <= 1.2) -> "(Нормальная острота зрения)"
-                (7 <= age && age <= 8) && (vis > 1.2) -> "(Острота зрения выше нормы)"
-                (8 <= age && age <= 15) && (0.9 <= vis && vis <= 1.5) -> "(Нормальная острота зрения)"
-                (8 <= age && age <= 15) && (vis > 1.5) -> "(Острота зрения выше нормы)"
-                (15 <= age && age < 18) && (1.0 <= vis && vis <= 1.5) -> "(Нормальная острота зрения)"
-                (15 <= age && age < 18) && (vis > 1.5) -> "(Острота зрения выше нормы)"
-                else -> when {
-                    age >= 18 && (1.0 <= vis && vis <= 1.5) -> "(Нормальная острота зрения)"
-                    age >= 18 && (vis > 1.5) -> "(Острота зрения выше нормы)"
-                    else -> "(Недостаточная острота зрения)"
-                }
-            }
-            return normVis
-        }
 
         fun comparesph(sphODinput: Double, sphOSinput: Double, comparesphtextView: TextView): String {
             if (sphODinput == 0.0 || sphOSinput == 0.0) {
@@ -956,7 +902,44 @@ private val startIshiharaForResult = registerForActivityResult(ActivityResultCon
             return resultText
         }
     }
+
+    override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+        if (actionId == EditorInfo.IME_ACTION_NEXT) {
+            when (v?.id) {
+                R.id.birthDate_edit_text -> ageEditText.requestFocus()
+                R.id.age_edit_text -> lastNameEditText.requestFocus()  // Move to next EditText
+                R.id.last_name_edit_text -> firstNameEditText.requestFocus()
+                R.id.first_name_edit_text -> middleNameEditText.requestFocus()
+                R.id.middle_name_edit_text -> examinationdateEditText.requestFocus()
+                R.id.examination_date_edit_text -> visODinput.requestFocus()
+                R.id.visODinput -> visOSinput.requestFocus()
+                R.id.visOSinput -> visOUinput.requestFocus()
+                R.id.visOUinput -> visODcorrinput.requestFocus()
+                R.id.visODcorrinput -> visOScorrinput.requestFocus()
+                R.id.visOScorrinput -> visOUcorrinput.requestFocus()
+                R.id.visOUcorrinput -> sphODinput.requestFocus()
+                R.id.sphODinput -> cylODinput.requestFocus()
+                R.id.cylODinput -> axODinput.requestFocus()
+                R.id.axODinput -> sphOSinput.requestFocus()
+                R.id.sphOSinput -> cylOSinput.requestFocus()
+                R.id.cylOSinput -> axOSinput.requestFocus()
+                else -> return false
+            }
+            return true
+        }
+        return false
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        updateAgeDescription() // Update age description when gender changes
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+        // You can leave this empty or handle the case where nothing is selected
+    }
 }
+
+
 
 
 

@@ -125,6 +125,8 @@
     <string name="sixth_act_button_str">Тест цветоощущения Рабкина</string>
     <string name="textViewQuestionrabkin">Что изображено на рисунке?</string>
     <string name="seventh_act_button_text">Тест цветоощущения Ишихара</string>
+    <string name="question_1_of_12">Question 1 of 12</string>
+    <string name="bitrh_date_textview">Дата рождения</string>
 
 
 </resources>

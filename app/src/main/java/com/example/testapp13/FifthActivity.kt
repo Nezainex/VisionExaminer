@@ -105,8 +105,8 @@ class FifthActivity : AppCompatActivity() {
     private fun updateProfilesList(sortOption: SortOption) {
         // Sort profiles based on selected option
         when (sortOption) {
-            SortOption.DATE_DESC -> profilesList.sortByDescending { it.date }
-            SortOption.DATE_ASC -> profilesList.sortBy { it.date }
+            SortOption.DATE_DESC -> profilesList.sortByDescending { it.examinationdate }
+            SortOption.DATE_ASC -> profilesList.sortBy { it.examinationdate }
             SortOption.LAST_NAME -> profilesList.sortBy { it.lastName }
             SortOption.AGE_DESC -> profilesList.sortByDescending { it.age }
             SortOption.AGE_ASC -> profilesList.sortBy { it.age }

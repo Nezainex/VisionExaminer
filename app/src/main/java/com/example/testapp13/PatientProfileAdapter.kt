@@ -40,8 +40,8 @@ class PatientProfileAdapter(
             val currentProfile = profiles[position]
             val nameText = "${currentProfile.lastName} ${currentProfile.firstName} ${currentProfile.middleName}"
             val genderText = if (currentProfile.gender == "Мужской") "муж." else "жен."
-            val ageDateText = formatAgeAndDate(currentProfile.age, currentProfile.date)
-            viewHolder.textView.text = "$nameText\n($genderText) $ageDateText"
+            val ageDateText = formatAgeAndDate(currentProfile.age, currentProfile.examinationdate)
+            viewHolder.textView.text = "$nameText\n($genderText) $ageDateText\nДата рождения: ${currentProfile.birthDate}"
             viewHolder.deleteButton.visibility = View.VISIBLE
 
             // Обработчики нажатий
@@ -83,12 +83,12 @@ class PatientProfileAdapter(
         database.patientProfileDao().delete(profile)
     }
 
-    private fun formatAgeAndDate(age: Double, date: String): String {
+    private fun formatAgeAndDate(age: Double, examinationdate: String): String {
         val ageString = when {
             age.rem(1.0) == 0.0 -> age.toInt().toString() + getCorrectWordForm(age)
             else -> "$age ${getCorrectWordForm(age)}"
         }
-        return "$ageString\nДата осмотра: $date"
+        return "$ageString\nДата осмотра: $examinationdate"
     }
 
     private fun getCorrectWordForm(age: Double): String {

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
@@ -16,6 +17,8 @@ class SeventhActivity : AppCompatActivity() {
     private lateinit var resetButtonishihara: Button
     private lateinit var finishTestButtonishihara: Button
     private lateinit var imageViewishihara: ImageView
+    private lateinit var progressBarishihara: ProgressBar
+    private lateinit var progressTextishihara: TextView
 
     // Data class for Ishihara images and answers
     data class IshiharaImage(
@@ -208,7 +211,7 @@ class SeventhActivity : AppCompatActivity() {
         // Image 23: Normal and Protanopia see "4 and 2 (42)", Deuteranopia or Deuteranomaly  see "4", Protanopia or Protanomaly see "2"
         IshiharaImage(
             R.drawable.ishihara23,
-            "3 и 6 (36)", // Normal
+            "4 и 2 (42)", // Normal
             "Ничего",
             "2", // Protanopia or Protanomaly see "2"
             "4", // Deuteranopia or Deuteranomaly  see "4"
@@ -364,7 +367,8 @@ class SeventhActivity : AppCompatActivity() {
             findViewById(R.id.buttonAnswer3),
             findViewById(R.id.buttonAnswer4),
         )
-
+        progressBarishihara = findViewById(R.id.progressBarishihara)
+        progressTextishihara = findViewById(R.id.progressTextishihara)
         resetButtonishihara.setOnClickListener { resetQuiz() }
         showQuestion()
         disableFinishButton()
@@ -373,10 +377,13 @@ class SeventhActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun showQuestion() {
         val currentImage = ishiharaImages[currentQuestionIndex]
         imageViewishihara.setImageResource(currentImage.imageResource)
-
+        val progress = (currentQuestionIndex + 1) * 100 / ishiharaImages.size
+        progressBarishihara.progress = progress
+        progressTextishihara.text = "Question ${currentQuestionIndex + 1} of ${ishiharaImages.size}"
         // Create a list of all answer options, including the correct answer and others
         val answerOptions = listOf(
             currentImage.correctAnswer,

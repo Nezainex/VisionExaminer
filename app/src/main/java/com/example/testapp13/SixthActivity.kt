@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
@@ -16,6 +17,8 @@ class SixthActivity : AppCompatActivity() {
     private lateinit var resetButtonrabkin: Button
     private lateinit var finishTestButtonrabkin: Button
     private lateinit var imageViewrabkin: ImageView
+    private lateinit var progressBarrabkin: ProgressBar
+    private lateinit var progressTextrabkin: TextView
 
     // Data class for Rabkin images and answers
     data class RabkinImage(
@@ -275,7 +278,8 @@ class SixthActivity : AppCompatActivity() {
             findViewById(R.id.buttonAnswer3),
             findViewById(R.id.buttonAnswer4),
         )
-
+        progressBarrabkin = findViewById(R.id.progressBarrabkin)
+        progressTextrabkin = findViewById(R.id.progressTextrabkin)
         resetButtonrabkin.setOnClickListener { resetQuiz() }
         showQuestion()
         disableFinishButton()
@@ -284,9 +288,13 @@ class SixthActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun showQuestion() {
         val currentImage = rabkinImages[currentQuestionIndex]
         imageViewrabkin.setImageResource(currentImage.imageResource)
+        val progress = (currentQuestionIndex + 1) * 100 / rabkinImages.size
+        progressBarrabkin.progress = progress
+        progressTextrabkin.text = "Question ${currentQuestionIndex + 1} of ${rabkinImages.size}"
 
         // Create a list of all answer options, including the correct answer and others
         val answerOptions = listOf(

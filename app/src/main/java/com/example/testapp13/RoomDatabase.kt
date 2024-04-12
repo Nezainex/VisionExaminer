@@ -7,7 +7,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
     entities = [PatientProfile::class, OsdiResult::class, RabkinResult::class, IshiharaResult::class],
-    version = 6
+    version = 8
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun patientProfileDao(): PatientProfileDao
@@ -15,8 +15,6 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
         val MIGRATION_4_5 = object : Migration(4, 5) {
             override fun migrate(db: SupportSQLiteDatabase) {
-                // Здесь добавьте SQL-запросы для изменения схемы с версии 4 на версию 5
-                // Например, если вы добавили таблицу "ishihara_results" в версии 5:
                 db.execSQL("CREATE TABLE IF NOT EXISTS `rabkin_results` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `patientProfileId` INTEGER NOT NULL, `score` INTEGER NOT NULL, `resultText` TEXT NOT NULL)")
             }
         }
@@ -24,6 +22,29 @@ abstract class AppDatabase : RoomDatabase() {
         val MIGRATION_5_6 = object : Migration(5, 6) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("CREATE TABLE IF NOT EXISTS `ishihara_results` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `patientProfileId` INTEGER NOT NULL, `score` INTEGER NOT NULL, `resultText` TEXT NOT NULL)")
+            }
+        }
+        val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE patient_profiles ADD COLUMN birthDate TEXT NOT NULL DEFAULT ''")
+            }
+        }
+
+        val MIGRATION_4_7 = object : Migration(4, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // Migration steps from 4 to 5
+                db.execSQL("CREATE TABLE IF NOT EXISTS `rabkin_results` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `patientProfileId` INTEGER NOT NULL, `score` INTEGER NOT NULL, `resultText` TEXT NOT NULL)")
+
+                // Migration steps from 5 to 6
+                db.execSQL("CREATE TABLE IF NOT EXISTS `ishihara_results` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `patientProfileId` INTEGER NOT NULL, `score` INTEGER NOT NULL, `resultText` TEXT NOT NULL)")
+
+                // Migration steps from 6 to 7
+                db.execSQL("ALTER TABLE patient_profiles ADD COLUMN birthDate TEXT NOT NULL DEFAULT ''")
+            }
+        }
+        val MIGRATION_7_8 = object : Migration(7, 8) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE patient_profiles RENAME COLUMN date TO examinationdate")
             }
         }
     }

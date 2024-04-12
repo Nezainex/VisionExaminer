@@ -7,13 +7,15 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "patient_profiles")
 data class PatientProfile(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val birthDate: String = "",
     val lastName: String,
     val firstName: String,
     val middleName: String,
     val gender: String,
     val age: Double,
-    val date: String,
+    val examinationdate: String,
     val visOD: Double,
     val visOS: Double,
     val visOU: Double,
@@ -38,6 +40,7 @@ data class PatientProfile(
 
     constructor(parcel: Parcel) : this(
         parcel.readInt(), // Read the id value
+        parcel.readString()!!,
         parcel.readString()!!,
         parcel.readString()!!,
         parcel.readString()!!,
@@ -68,12 +71,13 @@ data class PatientProfile(
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(id)
+        parcel.writeString(birthDate)
         parcel.writeString(lastName)
         parcel.writeString(firstName)
         parcel.writeString(middleName)
         parcel.writeString(gender)
         parcel.writeDouble(age)
-        parcel.writeString(date)
+        parcel.writeString(examinationdate)
         parcel.writeDouble(visOD)
         parcel.writeDouble(visOS)
         parcel.writeDouble(visOU)

@@ -12,6 +12,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+@Suppress("DEPRECATION")
 class ThirdActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -23,14 +24,17 @@ class ThirdActivity : AppCompatActivity() {
 
         // Get the PatientProfile object from the Intent
         val profile = intent.getParcelableExtra("profile", PatientProfile::class.java)
-
         // Find TextViews in your layout (replace with your actual IDs)
+
         val lastNameTextViewTA: TextView = findViewById(R.id.lastNameTextViewTA)
         val firstNameTextViewTA: TextView = findViewById(R.id.firstNameTextViewTA)
         val middleNameTextViewTA: TextView = findViewById(R.id.middleNameTextViewTA)
         val genderTextViewTA: TextView = findViewById(R.id.genderTextViewTA)
         val ageTextViewTA: TextView = findViewById(R.id.ageTextViewTA)
-        val dateTextViewTA: TextView = findViewById(R.id.dateTextViewTA)
+        val textViewAgeCalc: TextView = findViewById(R.id.textViewAgeCalcTA)
+        val examinationdateTextViewTA: TextView = findViewById(R.id.examinationdateTextViewTA)
+        val birthDateTextViewTA: TextView = findViewById(R.id.birthDateTextViewTA)
+
 
         val visODtextViewTA: TextView = findViewById(R.id.visODtextViewTA)
         val visOStextViewTA: TextView = findViewById(R.id.visOStextViewTA)
@@ -63,6 +67,8 @@ class ThirdActivity : AppCompatActivity() {
         val vistransformtextViewOScorr: TextView = findViewById(R.id.vistransformtextViewOScorr)
         val vistransformtextViewOUcorr: TextView = findViewById(R.id.vistransformtextViewOUcorr)
 
+        val birthDate = intent.getStringExtra("birthDate")
+        birthDateTextViewTA.text = "Дата рождения: $birthDate"
         val agetransformTextView: TextView = findViewById(R.id.agetransform_text_View)
 
         val textViewsphOD: TextView = findViewById(R.id.textViewsphOD)
@@ -152,7 +158,8 @@ class ThirdActivity : AppCompatActivity() {
             middleNameTextViewTA.text = "Отчество: ${profile.middleName}"
             genderTextViewTA.text = "Пол: ${profile.gender}"
 
-            dateTextViewTA.text = "Дата осмотра: ${profile.date}"
+            examinationdateTextViewTA.text = "Дата осмотра: ${profile. examinationdate}"
+            birthDateTextViewTA.text = "Дата рождения: ${profile.birthDate}"
 
             visODtextViewTA.text = "Vis OD: ${profile.visOD}"
             visOStextViewTA.text = "Vis OS: ${profile.visOS}"
@@ -181,21 +188,21 @@ class ThirdActivity : AppCompatActivity() {
             midrtextViewTA.text = "Мидриатик: ${profile.midriaticAgent}"
 
             agetransformTextView.text = SecondActivity.ageTransform(profile.age, profile.gender == "Мужской")
+            ageTextViewTA.text = "Возраст: ${profile.age} ${getCorrectWordForm(profile.age)}"
+            vistransformtextViewOD.text = SecondActivity.visTransform(profile.visOD, profile.age, textViewAgeCalc)
+            vistransformtextViewOS.text = SecondActivity.visTransform(profile.visOS, profile.age, textViewAgeCalc)
+            vistransformtextViewOU.text = SecondActivity.visTransform(profile.visOU, profile.age, textViewAgeCalc)
 
-            vistransformtextViewOD.text = SecondActivity.visTransformOD(profile.visOD, profile.age)
-            vistransformtextViewOS.text = SecondActivity.visTransformOS(profile.visOS, profile.age)
-            vistransformtextViewOU.text = SecondActivity.visTransformOU(profile.visOU, profile.age)
+            vistransformtextViewODcorr.text = SecondActivity.visTransformcorr(profile.visODcorr, profile.age, textViewAgeCalc)
+            vistransformtextViewOScorr.text = SecondActivity.visTransformcorr(profile.visOScorr, profile.age, textViewAgeCalc)
+            vistransformtextViewOUcorr.text = SecondActivity.visTransformcorr(profile.visOUcorr, profile.age, textViewAgeCalc)
 
-            vistransformtextViewODcorr.text = SecondActivity.visTransformOD(profile.visODcorr, profile.age)
-            vistransformtextViewOScorr.text = SecondActivity.visTransformOS(profile.visOScorr, profile.age)
-            vistransformtextViewOUcorr.text = SecondActivity.visTransformOU(profile.visOUcorr, profile.age)
+            textViewsphOD.text = SecondActivity.sphCalculate(profile.sphOD, profile.age, "OD")
+            textViewcylOD.text = SecondActivity.cylCalculate(profile.cylOD, "OD")
+            //textViewaxOD.text = SecondActivity.axCalculateOD(profile.axOD, profile.age)
 
-            textViewsphOD.text = SecondActivity.sphCalculateOD(profile.sphOD, profile.age)
-            textViewcylOD.text = SecondActivity.cylCalculateOD(profile.cylOD)
-          //textViewaxOD.text = SecondActivity.axCalculateOD(profile.axOD, profile.age)
-
-            textViewsphOS.text = SecondActivity.sphCalculateOS(profile.sphOS, profile.age)
-            textViewcylOS.text = SecondActivity.cylCalculateOS(profile.cylOS)
+            textViewsphOS.text = SecondActivity.sphCalculate(profile.sphOS, profile.age, "OS")
+            textViewcylOS.text = SecondActivity.cylCalculate(profile.cylOS, "OS")
           //textViewaxOS.text = SecondActivity.axCalculateOS(profile.axOS, profile.age)
 
             comparesphtextView.text = profile.comparesphResult

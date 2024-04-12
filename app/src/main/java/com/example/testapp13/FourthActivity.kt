@@ -1,10 +1,12 @@
 package com.example.testapp13
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 
 
@@ -16,19 +18,23 @@ class FourthActivity : AppCompatActivity() {
     private lateinit var resetButton: Button
     private lateinit var imageViewDryEye: ImageView
 
+    private lateinit var progressBardryeye: ProgressBar
+    private lateinit var progressTextdryeye: TextView
+
+
     private val questions = listOf(
-        "1/12 Испытывали ли вы за последнюю неделю повышенную светочувствительность?",
-        "2/12 Испытывали ли вы за последнюю неделю ощущение песка в глазах?",
-        "3/12 Испытывали ли вы за последнюю неделю болезненность, покраснение глаз?",
-        "4/12 Испытывали ли вы за последнюю неделю затуманивание зрения?",
-        "5/12 Испытывали ли вы за последнюю неделю ухудшение зрения?",
-        "6/12 Появились ли у вас за последнюю неделю проблемы со зрением, затрудняющие чтение?",
-        "7/12 Появились ли у вас за последнюю неделю проблемы со зрением, затрудняющие ночное вождение?",
-        "8/12 Появились ли у вас за последнюю неделю проблемы со зрением, затрудняющие работу за компьютером?",
-        "9/12 Появились ли у вас за последнюю неделю проблемы со зрением, затрудняющие просмотр телевизора?",
-        "10/12 Испытываете ли вы неприятные ощущения в глазах в ветреную погоду?",
-        "11/12 Испытываете ли вы неприятные ощущения в глазах в местах с низкой влажностью (сухой воздух)?",
-        "12/12 Испытываете ли вы неприятные ощущения в глазах в местах, где работает кондиционер?"
+        "Испытывали ли вы за последнюю неделю повышенную светочувствительность?",
+        "Испытывали ли вы за последнюю неделю ощущение песка в глазах?",
+        "Испытывали ли вы за последнюю неделю болезненность, покраснение глаз?",
+        "Испытывали ли вы за последнюю неделю затуманивание зрения?",
+        "Испытывали ли вы за последнюю неделю ухудшение зрения?",
+        "Появились ли у вас за последнюю неделю проблемы со зрением, затрудняющие чтение?",
+        "Появились ли у вас за последнюю неделю проблемы со зрением, затрудняющие ночное вождение?",
+        "Появились ли у вас за последнюю неделю проблемы со зрением, затрудняющие работу за компьютером?",
+        "Появились ли у вас за последнюю неделю проблемы со зрением, затрудняющие просмотр телевизора?",
+        "Испытываете ли вы неприятные ощущения в глазах в ветреную погоду?",
+        "Испытываете ли вы неприятные ощущения в глазах в местах с низкой влажностью (сухой воздух)?",
+        "Испытываете ли вы неприятные ощущения в глазах в местах, где работает кондиционер?"
     )
 
     private val answerOptions = listOf(
@@ -78,7 +84,8 @@ class FourthActivity : AppCompatActivity() {
             findViewById(R.id.buttonNever),
             findViewById(R.id.buttonCantTell)
         )
-
+        progressBardryeye = findViewById(R.id.progressBardryeye)
+        progressTextdryeye = findViewById(R.id.progressTextdryeye)
         resetButton.setOnClickListener { resetQuiz() }
 
         showQuestion()
@@ -89,10 +96,13 @@ class FourthActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun showQuestion() {
         val currentQuestion = questions[currentQuestionIndex]
         questionTextView.text = currentQuestion
-
+        val progress = (currentQuestionIndex + 1) * 100 / questions.size
+        progressBardryeye.progress = progress
+        progressTextdryeye.text = "Question ${currentQuestionIndex + 1} of ${questions.size}"
         // Set text and click listeners for answer buttons
         for (i in answerOptions.indices) {
             answerButtons[i].text = answerOptions[i].first
@@ -153,13 +163,16 @@ class FourthActivity : AppCompatActivity() {
         finishTestButton.isEnabled = false
     }
 
+    @SuppressLint("SetTextI18n")
     private fun resetQuiz() {
         currentQuestionIndex = 0
         totalScore = 0
         resultTextView.text = ""
         enableAnswerButtons()
         showQuestion()
-        disableFinishButton() // Деактивируем кнопку при сбросе
+        disableFinishButton()
+        progressBardryeye.progress = 0
+        progressTextdryeye.text = "Question 1 of ${questions.size}"// Деактивируем кнопку при сбросе
     }
 
     private fun enableAnswerButtons() {

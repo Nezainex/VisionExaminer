@@ -14,7 +14,7 @@ object DatabaseInstance {
                 AppDatabase::class.java,
                 "patient_profiles_database"
             )
-                .addMigrations(MIGRATION_4_5, AppDatabase.MIGRATION_5_6) // Добавляем обе миграции
+                .addMigrations(MIGRATION_4_5, AppDatabase.MIGRATION_5_6, AppDatabase.MIGRATION_6_7, AppDatabase.MIGRATION_4_7, AppDatabase.MIGRATION_7_8) // Добавляем обе миграции
                 .build()
         }
         return instance!!
