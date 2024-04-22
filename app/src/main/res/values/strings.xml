@@ -131,6 +131,8 @@
     <string name="angle">Angle: -</string>
     <string name="back">Back</string>
     <string name="switch_camera">Switch Camera</string>
+    <string name="refresh">Refresh</string>
+    <string name="unfreeze">Unfreeze</string>
 
 
 </resources>
