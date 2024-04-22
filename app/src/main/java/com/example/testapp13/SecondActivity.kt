@@ -12,25 +12,31 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Spinner
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
-import java.util.concurrent.TimeUnit
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
+import java.util.Calendar
+import java.util.Locale
 import kotlin.math.abs
 
 class SecondActivity : AppCompatActivity(),TextView.OnEditorActionListener, AdapterView.OnItemSelectedListener {
 
     private lateinit var genderSpinner: Spinner
     private lateinit var birthDateEditText: EditText
-    private lateinit var ageEditText: EditText
     private lateinit var textViewAgeCalc: TextView
     private lateinit var agetransformtextView: TextView
-    private var lastKeyPressed = 0
 
     private lateinit var lastNameEditText: EditText
     private lateinit var firstNameEditText: EditText
@@ -81,6 +87,7 @@ class SecondActivity : AppCompatActivity(),TextView.OnEditorActionListener, Adap
 
     private lateinit var savebutton: Button
     private lateinit var clearbutton: Button
+    private lateinit var camerabutton: Button
 
     private var osdiResult: OsdiResult? = null
     private var rabkinResult: RabkinResult? = null
@@ -128,13 +135,10 @@ class SecondActivity : AppCompatActivity(),TextView.OnEditorActionListener, Adap
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
-
         supportActionBar?.hide() //эта штука нужна, чтоб скрыть название активити сверху
-
         // Initialize views
         genderSpinner = findViewById(R.id.gender_spinner)
         birthDateEditText = findViewById(R.id.birthDate_edit_text)
-        ageEditText = findViewById(R.id.age_edit_text)
         textViewAgeCalc = findViewById(R.id.textViewAgeCalc)
         agetransformtextView = findViewById(R.id.agetransform_text_View)
 
@@ -190,6 +194,7 @@ class SecondActivity : AppCompatActivity(),TextView.OnEditorActionListener, Adap
 
         savebutton = findViewById(R.id.buttonsave)
         clearbutton = findViewById(R.id.buttonclear)
+       camerabutton = findViewById(R.id.camera_button)
 
         // Настройка spinner для выбора мидриатика
         val midrAdapter = ArrayAdapter.createFromResource(
@@ -206,28 +211,13 @@ class SecondActivity : AppCompatActivity(),TextView.OnEditorActionListener, Adap
 
 
         // Create a single TextWatcher instance
-        val textWatcher = object : TextWatcher {
+         val textWatcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                s?.let { text ->
-                    // Handle dot deletion on backspace
-                    if (text.isNotEmpty() && text.last() == '.' && lastKeyPressed == KeyEvent.KEYCODE_DEL) {
-                        text.delete(text.length - 2, text.length) // Delete dot and preceding character
-                    } else if (text.length == 2 || text.length == 5) {
-                        // Insert dots automatically
-                        if (!text.endsWith(".")) {
-                            text.append(".")
-                        }
-                    }
-
-                    // Validate date components
-                    val parts = text.split(".")
-                    if (parts.size == 3) {
-                        val day = parts[0].toIntOrNull()
-                        val month = parts[1].toIntOrNull()
-                        val year = parts[2].toIntOrNull()
-                        if (day !in 1..31 || month !in 1..12) {
-                            // Дата некорректная, можно показать сообщение об ошибке
-                        }
+                // Automatically format the date as it's typed
+                val inputText = s.toString()
+                if (inputText.length == 2 || inputText.length == 5) {
+                    if (!inputText.endsWith(".")) {
+                        s?.append(".")
                     }
                 }
             }
@@ -237,18 +227,8 @@ class SecondActivity : AppCompatActivity(),TextView.OnEditorActionListener, Adap
                 val changedView = currentFocus // Get the view that was just edited
                 Log.d("TextWatcher", "onTextChanged called for view: ${changedView?.id}") // Add logging
                 when (changedView?.id) {
-                    R.id.birthDate_edit_text -> { // Birth date input changed
-                        updateAgeDescription() // This will now calculate age from birth date
-                        updateVisDescription()
-                        updateVisDescriptioncorr()
-                        updateSphDescription()
-                        updateComparesphText()
-                        updateCylDescription()
-                        transposeOD()
-                        transposeOS()
-                    }
-                    R.id.age_edit_text -> { // Manual age input changed
-                        updateAgeDescription()
+                    R.id.birthDate_edit_text -> {
+                        updateAgeDescription() // Update age description display
                         updateVisDescription()
                         updateVisDescriptioncorr()
                         updateSphDescription()
@@ -290,7 +270,7 @@ class SecondActivity : AppCompatActivity(),TextView.OnEditorActionListener, Adap
             val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
             birthDateEditText.setText(dateFormat.format(birthcalendar.time))
         }
-
+        birthDateEditText.addTextChangedListener(textWatcher)
         birthDateEditText.setOnClickListener {
             DatePickerDialog(
                 this,
@@ -309,12 +289,8 @@ class SecondActivity : AppCompatActivity(),TextView.OnEditorActionListener, Adap
             val middleName = middleNameEditText.text.toString()
             val gender = genderSpinner.selectedItem.toString()
 
-            // Convert age to Double
-            val age = try {
-                ageEditText.text.toString().toDouble()
-            } catch (e: Exception) {
-                0.0
-            }
+
+            val age = calculateAgeFromBirthDate()
             val examinationdate = examinationdateEditText.text.toString()
             // Get data from visual acuity fields
             val visOD = visODinput.text.toString().toDoubleOrNull() ?: 0.0
@@ -397,12 +373,16 @@ class SecondActivity : AppCompatActivity(),TextView.OnEditorActionListener, Adap
             val intent = Intent(this, SeventhActivity::class.java)
             startIshiharaForResult.launch(intent) // Запуск SeventhActivity с startIshiharaForResult
         }
+        val  camerabutton = findViewById<Button>(R.id.camera_button)
+        camerabutton.setOnClickListener {
+            val intent = Intent(this, CameraActivity::class.java)
+            startActivity(intent)
+        }
 
         // Обработчик нажатия кнопки "Clear"
         clearbutton.setOnClickListener {
             // Очистка текстовых полей
             birthDateEditText.text.clear()
-            ageEditText.text.clear()
             lastNameEditText.text.clear()
             firstNameEditText.text.clear()
             middleNameEditText.text.clear()
@@ -435,7 +415,6 @@ class SecondActivity : AppCompatActivity(),TextView.OnEditorActionListener, Adap
         genderSpinner.onItemSelectedListener = this
         // Attach the TextWatcher to all relevant input fields
         birthDateEditText.addTextChangedListener(textWatcher)
-        ageEditText.addTextChangedListener(textWatcher)
         examinationdateEditText.addTextChangedListener(textWatcher)
         visODinput.addTextChangedListener(textWatcher)
         visOSinput.addTextChangedListener(textWatcher)
@@ -453,7 +432,6 @@ class SecondActivity : AppCompatActivity(),TextView.OnEditorActionListener, Adap
         axOSinput.addTextChangedListener(textWatcher)
 
         birthDateEditText.setOnEditorActionListener(this)
-        ageEditText.setOnEditorActionListener(this)
         lastNameEditText.setOnEditorActionListener(this)
         firstNameEditText.setOnEditorActionListener(this)
         middleNameEditText.setOnEditorActionListener(this)
@@ -594,96 +572,76 @@ class SecondActivity : AppCompatActivity(),TextView.OnEditorActionListener, Adap
     }
 
     private fun calculateAgeFromBirthDate(): Double {
-        Log.d("BirthDateCalc", "calculateAgeFromBirthDate() called")
         val birthDateString = birthDateEditText.text.toString()
-        Log.d("BirthDateCalc", "Birth date string: $birthDateString")
-        if (birthDateString.isBlank()) {
-            Log.d("BirthDateCalc", "Birth date string is blank, returning 0.0")
-            return 0.0 // Return 0 if no date
-        }
-        val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-        val birthDate = try {
-            dateFormat.parse(birthDateString)
+        if (birthDateString.length < 8) return 0.0
+
+        val dateParts = birthDateString.split("[.,]".toRegex())
+        if (dateParts.size != 3) return 0.0
+
+        return try {
+            val day = dateParts[0].toInt()
+            val month = dateParts[1].toInt() - 1 // Adjust month to 0-based index
+            val year = dateParts[2].toInt()
+
+            val today = LocalDate.now()
+            val birthDate = LocalDate.of(year, month + 1, day) // Create LocalDate directly
+
+            val ageInYears = ChronoUnit.YEARS.between(birthDate, today)
+            ageInYears.toDouble()
+
         } catch (e: Exception) {
             Log.w("BirthDateCalc", "Error parsing birth date", e)
-            null
+            0.0
         }
-
-        birthDate?.let {
-            Log.d("BirthDateCalc", "Parsed birth date: $birthDate")
-            val today = Calendar.getInstance().time
-            Log.d("BirthDateCalc", "Today's date: $today")
-            val diffInMillis = abs(today.time - birthDate.time)
-            val diffInDays = TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS)
-            Log.d("BirthDateCalc", "Difference in days: $diffInDays")
-            val age = diffInDays / 365.25
-            Log.d("BirthDateCalc", "Calculated age: $age")
-            return age
-        }
-        Log.d("BirthDateCalc", "Birth date parsing failed, returning 0.0")
-        return 0.0 // Return 0 if parsing failed
     }
 
     // Обработчик изменения текста в поле ввода ageEditText
     private fun updateAgeDescription() {
-        Log.d("AgeDescription", "updateAgeDescription() called") // Log function entry
-        val ageFromInput = try {
-            ageEditText.text.toString().toDouble()
-        } catch (e: Exception) {
-            Log.w("AgeDescription", "Error parsing age input", e) // Log parsing error
-            0.0
-        }
-        val ageFromBirthDate = calculateAgeFromBirthDate()
-        Log.d("AgeDescription", "Age from birth date: $ageFromBirthDate") // Log calculated age
-        val age = if (ageFromInput > 0.0) ageFromInput else ageFromBirthDate
+        val age = calculateAgeFromBirthDate()
         val isMale = genderSpinner.selectedItem.toString() == "Мужской"
         agetransformtextView.text = ageTransform(age, isMale)
-        // Update textViewAgeCalc if age is calculated from birth date
-        if (ageFromInput == 0.0 && ageFromBirthDate > 0.0) {
-            textViewAgeCalc.text = String.format("%.2f", ageFromBirthDate) // Display calculated age
-        } else {
-            textViewAgeCalc.text = "" // Clear the TextView
-        }
     }
 
     // Обработчик изменения текста в полях ввода vis ODinput, vis OSinput, vis OUinput
     private fun updateVisDescription() {
-        val ageFromInput = try { ageEditText.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        val ageFromBirthDate = calculateAgeFromBirthDate()
-        val age = if (ageFromInput > 0.0) ageFromInput else ageFromBirthDate // Use input age if available
-            // OD
+        val age = calculateAgeFromBirthDate()
+
+        // OD
         val visOD = try { visODinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
         vistransformtextViewOD.text = visTransform(visOD, age, textViewAgeCalc)
-            // OS
+
+        // OS
         val visOS = try { visOSinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
         vistransformtextViewOS.text = visTransform(visOS, age, textViewAgeCalc)
-            // OU
+
+        // OU
         val visOU = try { visOUinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
         vistransformtextViewOU.text = visTransform(visOU, age, textViewAgeCalc)
     }
     // Обработчик изменения текста в полях ввода vis ODcorrinput, vis OScorrinput, vis OUcorrinput
     private fun updateVisDescriptioncorr() {
-        val ageFromInput = try { ageEditText.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        val ageFromBirthDate = calculateAgeFromBirthDate()
-        val age = if (ageFromInput > 0.0) ageFromInput else ageFromBirthDate // Use input age if available
+        val age = calculateAgeFromBirthDate()
+
         // OD
         val visODcorr = try { visODcorrinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        vistransformtextViewODcorr.text = visTransform(visODcorr, age, textViewAgeCalc)
+        vistransformtextViewODcorr.text = visTransformcorr(visODcorr, age, textViewAgeCalc)
+
         // OS
         val visOScorr = try { visOScorrinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        vistransformtextViewOScorr.text = visTransform(visOScorr, age, textViewAgeCalc)
+        vistransformtextViewOScorr.text = visTransformcorr(visOScorr, age, textViewAgeCalc)
+
         // OU
         val visOUcorr = try { visOUcorrinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        vistransformtextViewOUcorr.text = visTransform(visOUcorr, age, textViewAgeCalc)
+        vistransformtextViewOUcorr.text = visTransformcorr(visOUcorr, age, textViewAgeCalc)
     }
     // Обработчик изменения текста в поле ввода sphODinput
     private fun updateSphDescription() {
-        val ageFromInput = try { ageEditText.text.toString().toDouble() } catch (e: Exception) { 0.0 }
-        val ageFromBirthDate = calculateAgeFromBirthDate()
-        val age = if (ageFromInput > 0.0) ageFromInput else ageFromBirthDate
+        val age = calculateAgeFromBirthDate()
+
         // OD
         val sphOD = try { sphODinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
         textViewsphOD.text = sphCalculate(sphOD, age, "OD")
+
         // OS
         val sphOS = try { sphOSinput.text.toString().toDouble() } catch (e: Exception) { 0.0 }
         textViewsphOS.text = sphCalculate(sphOS, age, "OS")
@@ -906,8 +864,7 @@ class SecondActivity : AppCompatActivity(),TextView.OnEditorActionListener, Adap
     override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
         if (actionId == EditorInfo.IME_ACTION_NEXT) {
             when (v?.id) {
-                R.id.birthDate_edit_text -> ageEditText.requestFocus()
-                R.id.age_edit_text -> lastNameEditText.requestFocus()  // Move to next EditText
+                R.id.birthDate_edit_text -> lastNameEditText.requestFocus()  // Move to next EditText
                 R.id.last_name_edit_text -> firstNameEditText.requestFocus()
                 R.id.first_name_edit_text -> middleNameEditText.requestFocus()
                 R.id.middle_name_edit_text -> examinationdateEditText.requestFocus()
@@ -938,7 +895,6 @@ class SecondActivity : AppCompatActivity(),TextView.OnEditorActionListener, Adap
         // You can leave this empty or handle the case where nothing is selected
     }
 }
-
 
 
 
