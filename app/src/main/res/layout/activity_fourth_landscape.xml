@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FourthActivity">
+
+    <!-- Button Always -->
+
+    <ImageView
+        android:id="@+id/imageViewdryeye"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_margin="16dp"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textViewQuestion"
+        android:layout_width="600dp"
+        android:layout_height="120dp"
+        android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/buttonMostofthetime"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewdryeye"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewResult"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:layout_margin="16dp"
+        android:layout_marginStart="376dp"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/buttonNever"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewdryeye" />
+
+    <FrameLayout
+        android:id="@+id/buttonAlways"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:background="@drawable/osdi_inside_buttons_background"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toTopOf="@+id/buttonHalftime"
+        app:layout_constraintStart_toEndOf="@+id/buttonMostofthetime">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/buttonAlways"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+    </FrameLayout>
+
+    <!-- Button Most of the time -->
+    <FrameLayout
+        android:id="@+id/buttonMostofthetime"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:background="@drawable/osdi_inside_buttons_background"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toTopOf="@+id/buttonSometimes"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/buttonMostofthetime"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+    </FrameLayout>
+
+    <!-- Button Half time -->
+    <FrameLayout
+        android:id="@+id/buttonHalftime"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:background="@drawable/osdi_inside_buttons_background"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toTopOf="@+id/buttonNever"
+        app:layout_constraintStart_toEndOf="@+id/buttonSometimes">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/buttonHalftime"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+    </FrameLayout>
+
+    <!-- Button Sometimes -->
+    <FrameLayout
+        android:id="@+id/buttonSometimes"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:background="@drawable/osdi_inside_buttons_background"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toTopOf="@+id/buttonCantTell"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/buttonSometimes"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+    </FrameLayout>
+
+    <!-- Button Never -->
+    <FrameLayout
+        android:id="@+id/buttonNever"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:background="@drawable/osdi_inside_buttons_background"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonCantTell"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.83">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/buttonNever"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+    </FrameLayout>
+
+    <!-- Button Can't Tell -->
+    <FrameLayout
+        android:id="@+id/buttonCantTell"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:background="@drawable/osdi_inside_buttons_background"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toTopOf="@+id/finishTestButton"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/buttonCantTell"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+    </FrameLayout>
+
+    <!-- Reset Button -->
+    <FrameLayout
+        android:id="@+id/resetButton"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:background="@drawable/osdi_inside_buttons_background"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/finishTestButton">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/buttonReset"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+    </FrameLayout>
+
+    <!-- Finish Test Button -->
+    <FrameLayout
+        android:id="@+id/finishTestButton"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@drawable/osdi_inside_buttons_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/finish_Test_Button"
+            android:textSize="20sp"
+            android:textColor="@android:color/white" />
+    </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBardryeye"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="600dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/textViewQuestion"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/progressTextdryeye"
+        android:layout_width="600dp"
+        android:layout_height="wrap_content"
+        android:text="@string/question_1_of_12"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/progressBardryeye"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

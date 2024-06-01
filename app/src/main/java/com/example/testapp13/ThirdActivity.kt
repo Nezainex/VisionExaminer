@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
@@ -15,15 +16,31 @@ import kotlinx.coroutines.launch
 @Suppress("DEPRECATION")
 class ThirdActivity : AppCompatActivity() {
 
+    private var isNightMode = true
+
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        isNightMode = intent.getBooleanExtra("isNightMode", true) // Получение isNightMode
+        // Устанавливаем тему
+        if (isNightMode) {
+            setTheme(R.style.AppTheme_Night)
+        } else {
+            setTheme(R.style.AppTheme_Day)
+        }
+        // Устанавливаем цвет фона в зависимости от темы
+        val backgroundColor = if (isNightMode) {
+            ContextCompat.getColor(this, R.color.black)
+        } else {
+            ContextCompat.getColor(this, R.color.white)
+        }
         setContentView(R.layout.activity_third)
         supportActionBar?.hide()
+        window.decorView.setBackgroundColor(backgroundColor)
 
         // Get the PatientProfile object from the Intent
-        val profile = intent.getParcelableExtra("profile", PatientProfile::class.java)
+        val profile = intent.getParcelableExtra<PatientProfile>("profile")
         // Find TextViews in your layout (replace with your actual IDs)
 
         val lastNameTextViewTA: TextView = findViewById(R.id.lastNameTextViewTA)
@@ -73,11 +90,11 @@ class ThirdActivity : AppCompatActivity() {
 
         val textViewsphOD: TextView = findViewById(R.id.textViewsphOD)
         val textViewcylOD: TextView = findViewById(R.id.textViewcylOD)
-      //val textViewaxOD: TextView = findViewById(R.id.textViewaxOD)
+        //val textViewaxOD: TextView = findViewById(R.id.textViewaxOD)
 
         val textViewsphOS: TextView = findViewById(R.id.textViewsphOS)
         val textViewcylOS: TextView = findViewById(R.id.textViewcylOS)
-      //val textViewaxOS: TextView = findViewById(R.id.textViewaxOS)
+        //val textViewaxOS: TextView = findViewById(R.id.textViewaxOS)
 
         val comparesphtextView: TextView = findViewById(R.id.comparesphtextView)
 
@@ -203,7 +220,7 @@ class ThirdActivity : AppCompatActivity() {
 
             textViewsphOS.text = SecondActivity.sphCalculate(profile.sphOS, profile.age, "OS")
             textViewcylOS.text = SecondActivity.cylCalculate(profile.cylOS, "OS")
-          //textViewaxOS.text = SecondActivity.axCalculateOS(profile.axOS, profile.age)
+            //textViewaxOS.text = SecondActivity.axCalculateOS(profile.axOS, profile.age)
 
             comparesphtextView.text = profile.comparesphResult
 
@@ -261,4 +278,3 @@ class ThirdActivity : AppCompatActivity() {
         }
     }
 }
-

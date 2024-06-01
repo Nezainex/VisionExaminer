@@ -1,40 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/theme_toggle_image_view"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/moon"
-        android:contentDescription="@string/theme_toggle_description" />
-
-    <Button
-        android:id="@+id/new_profile_button"
-        android:textSize="20sp"
-        android:layout_width="250dp"
-        android:layout_height="100dp"
-        android:text="@string/new_profile"
+    <VideoView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/load_profile_button"
-        android:textSize="20sp"
+    <FrameLayout
+        android:id="@+id/theme_toggle_frame_layout"
+        android:layout_width="40dp"
+        android:layout_height="100dp"
+        android:background="@drawable/toggle_theme_button_background"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="@+id/load_profile_button"
+        app:layout_constraintEnd_toStartOf="@+id/new_profile_button"
+        app:layout_constraintStart_toStartOf="@+id/video_view"
+        app:layout_constraintTop_toTopOf="@+id/new_profile_button" />
+
+    <FrameLayout
+        android:id="@+id/new_profile_button"
         android:layout_width="250dp"
         android:layout_height="100dp"
-        android:text="@string/load_profile"
+        android:layout_marginBottom="42dp"
+        android:background="@drawable/new_profile_button_background"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_profile_button" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/new_profile"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/load_profile_button"
+        android:layout_width="250dp"
+        android:layout_height="100dp"
+        android:background="@drawable/save_button_background"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/new_profile_button">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/load_profile"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

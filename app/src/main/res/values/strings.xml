@@ -105,7 +105,6 @@
     </string-array>
 
     <string-array name="midriaticAgentArray">
-        <item>мидриатик не применялся</item>
         <item>тропикамид 1%</item>
         <item>тропикамид 0,5%</item>
         <item>мидриацил 1%</item>
@@ -122,6 +121,21 @@
         <item>фенилэфрин 2,5%</item>
     </string-array>
 
+    <string name="Tropicamide_one_percent">тропикамид 1%</string>
+    <string name="Tropicamide_half_a_percent">тропикамид 0,5%</string>
+    <string name="Mydriacyl_one_percent">мидриацил 1%</string>
+    <string name="Mydriacyl_half_a_percent">мидриацил 0,5%</string>
+    <string name="Cyclomed_one_percent">цикломед 1%</string>
+    <string name="Cyclopentolate_one_percent">циклопентолат 1%</string>
+    <string name="Cycloptic_one_percent">циклоптик 1%</string>
+    <string name="Atropine_one_percent">атропин 1%</string>
+    <string name="Atropine_sulfate_one_percent">атропина сульфат 1%</string>
+    <string name="Irifrin_two_and_a_half_percent">ирифрин 2,5%</string>
+    <string name="Irifrin_without_preservative_two_and_a_half_percent">ирифрин БК 2,5%</string>
+    <string name="Tropicamide_two_and_a_half_percent">тропикамид 2,5%</string>
+    <string name="Mydrimax_two_and_a_half_percent">мидримакс 2,5%</string>
+    <string name="Phenylephrine_two_and_a_half_percent">фенилэфрин 2,5%</string>
+
     <string name="sixth_act_button_str">Тест цветоощущения Рабкина</string>
     <string name="textViewQuestionrabkin">Что изображено на рисунке?</string>
     <string name="seventh_act_button_text">Тест цветоощущения Ишихара</string>
@@ -133,6 +147,15 @@
     <string name="switch_camera">Switch Camera</string>
     <string name="refresh">Refresh</string>
     <string name="unfreeze">Unfreeze</string>
+    <string name="textViewQuestionishihara">Что изображено на рисунке?</string>
+    <string name="sort_date_desc">Отобразить с самого давнего осмотра</string>
+    <string name="sort_date_asc">Отобразить с самого недавнего осмотра</string>
+    <string name="sort_last_name">Отобразить по фамилии в алфавитном порядке</string>
+    <string name="sort_age_desc">Отобразить с наибольшего возраста</string>
+    <string name="sort_age_asc">Отобразить с наименьшего возраста</string>
+    <string name="male">М</string>
+    <string name="female">Ж</string>
+    <string name="choose_midriatic">Выберите мидриатик</string>
 
 
 </resources>

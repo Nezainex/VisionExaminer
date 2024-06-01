@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".FifthActivity">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/patients_list_text_View"
@@ -17,15 +14,110 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Spinner
-        android:id="@+id/sort_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:spinnerMode="dialog"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
+    <FrameLayout
+        android:id="@+id/sort_button_date_desc"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/button4_background"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toBottomOf="@+id/patients_list_text_View"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/patients_list_text_View" />
+        app:layout_constraintEnd_toStartOf="@+id/sort_button_date_asc"
+        app:layout_constraintHorizontal_weight="1">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/sort_date_desc"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/sort_button_date_asc"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/button4_background"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toBottomOf="@+id/patients_list_text_View"
+        app:layout_constraintStart_toEndOf="@+id/sort_button_date_desc"
+        app:layout_constraintEnd_toStartOf="@+id/sort_button_last_name"
+        app:layout_constraintHorizontal_weight="1">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/sort_date_asc"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/sort_button_last_name"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/button4_background"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toBottomOf="@+id/patients_list_text_View"
+        app:layout_constraintStart_toEndOf="@+id/sort_button_date_asc"
+        app:layout_constraintEnd_toStartOf="@+id/sort_button_age_desc"
+        app:layout_constraintHorizontal_weight="1">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/sort_last_name"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/sort_button_age_desc"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/button4_background"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toBottomOf="@+id/patients_list_text_View"
+        app:layout_constraintStart_toEndOf="@+id/sort_button_last_name"
+        app:layout_constraintEnd_toStartOf="@+id/sort_button_age_asc"
+        app:layout_constraintHorizontal_weight="1">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/sort_age_desc"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/sort_button_age_asc"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/button4_background"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toBottomOf="@+id/patients_list_text_View"
+        app:layout_constraintStart_toEndOf="@+id/sort_button_age_desc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="1">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/sort_age_asc"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+    </FrameLayout>
 
     <EditText
         android:id="@+id/search_edit_text"
@@ -33,8 +125,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/Search"
         android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@+id/sort_spinner"
-        tools:ignore="LabelFor,TouchTargetSizeCheck,DuplicateSpeakableTextCheck,SpeakableTextPresentCheck"
+        app:layout_constraintTop_toBottomOf="@+id/sort_button_age_asc"
         android:autofillHints=""
         android:inputType="text" />
 
@@ -48,5 +139,4 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_edit_text" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

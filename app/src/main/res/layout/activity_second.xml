@@ -34,13 +34,35 @@
                 android:text="@string/gender_text_view"
                 android:textSize="20sp" />
 
-            <Spinner
-                android:id="@+id/gender_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:entries="@array/gender_array"
-                android:spinnerMode="dialog"
-                android:textSize="20sp" />
+            <FrameLayout
+                android:id="@+id/buttonMale"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/button4_background">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/male"
+                    android:textSize="20sp"
+                    android:textColor="@color/white" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/buttonFemale"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/button4_background">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/female"
+                    android:textSize="20sp"
+                    android:textColor="@color/white" />
+            </FrameLayout>
 
             </LinearLayout>
 
@@ -64,7 +86,6 @@
                     android:ems="10"
                     android:hint="@string/no_text"
                     android:inputType="date"
-                    android:textColorHint="#757575"
                     android:textSize="20sp"
                     android:focusableInTouchMode="true"
                     android:imeOptions="actionNext"
@@ -113,7 +134,6 @@
                 android:ems="10"
                 android:hint="@string/no_text"
                 android:inputType="text"
-                android:textColorHint="#757575"
                 android:textSize="20sp"
                 android:imeOptions="actionNext"
                 tools:ignore="SpeakableTextPresentCheck" />
@@ -140,7 +160,6 @@
                 android:ems="10"
                 android:hint="@string/no_text"
                 android:inputType="text"
-                android:textColorHint="#757575"
                 android:textSize="20sp"
                 android:imeOptions="actionNext"
                 tools:ignore="SpeakableTextPresentCheck" />
@@ -167,7 +186,6 @@
                 android:ems="10"
                 android:hint="@string/no_text"
                 android:inputType="text"
-                android:textColorHint="#757575"
                 android:textSize="20sp"
                 android:imeOptions="actionNext"
                 tools:ignore="SpeakableTextPresentCheck" />
@@ -194,7 +212,6 @@
                 android:ems="10"
                 android:hint="@string/no_text"
                 android:inputType="date"
-                android:textColorHint="#757575"
                 android:textSize="20sp"
                 android:imeOptions="actionNext"
                 tools:ignore="SpeakableTextPresentCheck" />
@@ -221,7 +238,6 @@
                 android:ems="10"
                 android:hint="@string/no_text"
                 android:inputType="numberDecimal"
-                android:textColorHint="#757575"
                 android:textSize="20sp"
                 android:imeOptions="actionNext"
                 tools:ignore="SpeakableTextPresentCheck"  />
@@ -255,7 +271,6 @@
                 android:ems="10"
                 android:hint="@string/no_text"
                 android:inputType="numberDecimal"
-                android:textColorHint="#757575"
                 android:textSize="20sp"
                 android:imeOptions="actionNext"
                 tools:ignore="SpeakableTextPresentCheck" />
@@ -291,7 +306,6 @@
                 android:ems="10"
                 android:hint="@string/no_text"
                 android:inputType="numberDecimal"
-                android:textColorHint="#757575"
                 android:textSize="20sp"
                 android:imeOptions="actionNext"
                 tools:ignore="SpeakableTextPresentCheck" />
@@ -325,7 +339,6 @@
                 android:ems="10"
                 android:hint="@string/no_text"
                 android:inputType="numberDecimal"
-                android:textColorHint="#757575"
                 android:textSize="20sp"
                 android:imeOptions="actionNext"
                 tools:ignore="SpeakableTextPresentCheck" />
@@ -359,7 +372,6 @@
                 android:ems="10"
                 android:hint="@string/no_text"
                 android:inputType="numberDecimal"
-                android:textColorHint="#757575"
                 android:textSize="20sp"
                 android:imeOptions="actionNext"
                 tools:ignore="SpeakableTextPresentCheck" />
@@ -395,7 +407,6 @@
                     android:ems="10"
                     android:hint="@string/no_text"
                     android:inputType="numberDecimal"
-                    android:textColorHint="#757575"
                     android:textSize="20sp"
                     android:imeOptions="actionNext"
                     tools:ignore="SpeakableTextPresentCheck" />
@@ -680,14 +691,23 @@
                 android:text="@string/no_text"
                 android:textSize="20sp" />
 
-
-
-            <Button
+            <FrameLayout
                 android:id="@+id/fourth_act_button"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:text="@string/fourth_act_button_str"
-                android:textSize="20sp" />
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/ishihara_button_background">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/fourth_act_button_str"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white" />
+
+            </FrameLayout>
 
 
             <TextView
@@ -697,15 +717,23 @@
                 android:text="@string/no_text"
                 android:textSize="20sp" />
 
-
-
-
-            <Button
+            <FrameLayout
                 android:id="@+id/sixth_act_button"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:text="@string/sixth_act_button_str"
-                android:textSize="20sp" />
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/ishihara_button_background">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/sixth_act_button_str"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white" />
+
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/rabkin_result_text_view"
@@ -714,12 +742,23 @@
                 android:text="@string/no_text"
                 android:textSize="20sp" />
 
-            <Button
+            <FrameLayout
                 android:id="@+id/seventh_act_button"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:text="@string/seventh_act_button_text"
-                android:textSize="20sp" />
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/ishihara_button_background">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/seventh_act_button_text"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white" />
+
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/ishihara_result_text_view"
@@ -734,13 +773,23 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <Spinner
-                    android:id="@+id/midriaticAgentSelect"
-                    android:layout_width="220dp"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/midriaticAgentArray"
-                    android:spinnerMode="dialog"
-                    android:textSize="20sp" />
+                    <FrameLayout
+                        android:id="@+id/midriaticButton"
+                        android:layout_width="160dp"
+                        android:layout_height="70dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="@drawable/save_button_background">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="@string/choose_midriatic"
+                            android:gravity="center"
+                            android:textSize="20sp"
+                            android:textColor="@android:color/white" />
+
+                    </FrameLayout>
 
                 <TextView
                     android:id="@+id/midrtextView"
@@ -751,12 +800,23 @@
 
             </LinearLayout>
 
-            <Button
+            <FrameLayout
                 android:id="@+id/camera_button"
                 android:layout_width="160dp"
-                android:layout_height="80sp"
-                android:textSize="20sp"
-                android:text="@string/camera" />
+                android:layout_height="70dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/camera_button_background">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/camera"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white" />
+
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -769,21 +829,42 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-
-                <Button
+                <FrameLayout
                     android:id="@+id/buttonsave"
                     android:layout_width="160dp"
-                    android:layout_height="80sp"
-                    android:text="@string/saveButton"
-                    android:textSize="20sp" />
+                    android:layout_height="70dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/save_button_background">
 
-                <Button
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/saveButton"
+                        android:gravity="center"
+                        android:textSize="20sp"
+                        android:textColor="@android:color/white" />
+
+                </FrameLayout>
+
+                <FrameLayout
                     android:id="@+id/buttonclear"
+                    android:layout_marginStart="140dp"
                     android:layout_width="160dp"
-                    android:layout_height="80sp"
-                    android:layout_marginStart="170dp"
-                    android:text="@string/clearButton"
-                    android:textSize="20sp" />
+                    android:layout_height="70dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/clear_button_background">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/clearButton"
+                        android:gravity="center"
+                        android:textSize="20sp"
+                        android:textColor="@android:color/white" />
+
+                </FrameLayout>
 
             </LinearLayout>
 

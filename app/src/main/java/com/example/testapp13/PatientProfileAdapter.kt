@@ -6,7 +6,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
@@ -16,12 +16,13 @@ import kotlinx.coroutines.withContext
 
 class PatientProfileAdapter(
     private var profiles: List<PatientProfile>,
-    private val context: Context
+    private val context: Context,
+    private val isNightMode: Boolean
 ) : RecyclerView.Adapter<PatientProfileAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.profile_item_text_view)
-        val deleteButton: Button = view.findViewById(R.id.delete_button)
+        val deleteButton: ImageButton = view.findViewById(R.id.delete_button)
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
@@ -32,7 +33,6 @@ class PatientProfileAdapter(
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        // Проверка на пустой список перед доступом к элементам
         if (profiles.isEmpty()) {
             viewHolder.textView.text = "Нет сохраненных профилей"
             viewHolder.deleteButton.visibility = View.GONE
@@ -44,11 +44,21 @@ class PatientProfileAdapter(
             viewHolder.textView.text = "$nameText\n($genderText) $ageDateText\nДата рождения: ${currentProfile.birthDate}"
             viewHolder.deleteButton.visibility = View.VISIBLE
 
-            // Обработчики нажатий
+            // Логика двойного нажатия
+            var clickCount = 0
             viewHolder.deleteButton.setOnClickListener {
-                val profileToDelete = profiles[position]
-                CoroutineScope(Dispatchers.Main).launch {
-                    deleteProfile(profileToDelete)
+                clickCount++
+                if (clickCount == 1) {
+                    // Первое нажатие: меняем фон
+                    viewHolder.deleteButton.setBackgroundResource(R.drawable.purplebutton) // !!!
+                } else if (clickCount == 2) {
+                    clickCount = 0
+                    // Второе нажатие: удаляем профиль и меняем фон обратно
+                    val profileToDelete = profiles[position]
+                    CoroutineScope(Dispatchers.Main).launch {
+                        deleteProfile(profileToDelete)
+                    }
+                    viewHolder.deleteButton.setBackgroundResource(R.drawable.bluebutton) // !!!
                 }
             }
 
@@ -56,9 +66,7 @@ class PatientProfileAdapter(
                 val profile = profiles[position]
                 val intent = Intent(context, ThirdActivity::class.java)
                 intent.putExtra("profile", profile)
-
-
-
+                intent.putExtra("isNightMode", isNightMode) // Передайте isNightMode
                 context.startActivity(intent)
             }
         }
@@ -75,7 +83,6 @@ class PatientProfileAdapter(
     @SuppressLint("NotifyDataSetChanged")
     private suspend fun deleteProfile(profile: PatientProfile) {
         profiles = profiles.filter { it.id != profile.id }
-        notifyDataSetChanged()
         withContext(Dispatchers.Main) {
             notifyDataSetChanged()
         }

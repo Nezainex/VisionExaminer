@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/Tropicamide_one_percent_button"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button4_background"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/Tropicamide_one_percent"
+            android:textSize="20sp"
+            android:textColor="@color/white" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/Tropicamide_half_a_percent_button"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button4_background"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/Tropicamide_half_a_percent"
+            android:textSize="20sp"
+            android:textColor="@color/white" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/Mydriacyl_one_percent_button"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button4_background"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/Mydriacyl_one_percent"
+            android:textSize="20sp"
+            android:textColor="@color/white" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/Mydriacyl_half_a_percent_button"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button4_background"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/Mydriacyl_half_a_percent"
+            android:textSize="20sp"
+            android:textColor="@color/white" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/Cyclomed_one_percent_button"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button4_background"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/Cyclomed_one_percent"
+            android:textSize="20sp"
+            android:textColor="@color/white" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/Cyclopentolate_one_percent_button"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button4_background"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/Cyclopentolate_one_percent"
+            android:textSize="20sp"
+            android:textColor="@color/white" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/Cycloptic_one_percent_button"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button4_background"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/Cycloptic_one_percent"
+            android:textSize="20sp"
+            android:textColor="@color/white" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/Atropine_one_percent_button"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button4_background"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/Atropine_one_percent"
+            android:textSize="20sp"
+            android:textColor="@color/white" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/Atropine_sulfate_one_percent_button"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button4_background"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/Atropine_sulfate_one_percent"
+            android:textSize="20sp"
+            android:textColor="@color/white" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/Irifrin_two_and_a_half_percent_button"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button4_background"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/Irifrin_two_and_a_half_percent"
+            android:textSize="20sp"
+            android:textColor="@color/white" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/Irifrin_without_preservative_two_and_a_half_percent_button"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button4_background"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/Irifrin_without_preservative_two_and_a_half_percent"
+            android:textSize="20sp"
+            android:textColor="@color/white" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/Tropicamide_two_and_a_half_percent_button"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button4_background"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/Tropicamide_two_and_a_half_percent"
+            android:textSize="20sp"
+            android:textColor="@color/white" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/Mydrimax_two_and_a_half_percent_button"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button4_background"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/Mydrimax_two_and_a_half_percent"
+            android:textSize="20sp"
+            android:textColor="@color/white" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/Phenylephrine_two_and_a_half_percent_button"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button4_background"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/Phenylephrine_two_and_a_half_percent"
+            android:textSize="20sp"
+            android:textColor="@color/white" />
+    </FrameLayout>
+
+    </LinearLayout>
+
+</ScrollView>

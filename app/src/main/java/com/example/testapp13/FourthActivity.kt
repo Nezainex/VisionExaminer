@@ -2,41 +2,27 @@ package com.example.testapp13
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.res.Configuration
 import android.os.Bundle
-import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 
 class FourthActivity : AppCompatActivity() {
 
     private lateinit var questionTextView: TextView
     private lateinit var resultTextView: TextView
-    private lateinit var answerButtons: List<Button>
-    private lateinit var resetButton: Button
+    private lateinit var answerButtons: List<FrameLayout>
+    private lateinit var resetButton: FrameLayout
     private lateinit var imageViewDryEye: ImageView
-
     private lateinit var progressBardryeye: ProgressBar
     private lateinit var progressTextdryeye: TextView
-
-
-    private val questions = listOf(
-        "Испытывали ли вы за последнюю неделю повышенную светочувствительность?",
-        "Испытывали ли вы за последнюю неделю ощущение песка в глазах?",
-        "Испытывали ли вы за последнюю неделю болезненность, покраснение глаз?",
-        "Испытывали ли вы за последнюю неделю затуманивание зрения?",
-        "Испытывали ли вы за последнюю неделю ухудшение зрения?",
-        "Появились ли у вас за последнюю неделю проблемы со зрением, затрудняющие чтение?",
-        "Появились ли у вас за последнюю неделю проблемы со зрением, затрудняющие ночное вождение?",
-        "Появились ли у вас за последнюю неделю проблемы со зрением, затрудняющие работу за компьютером?",
-        "Появились ли у вас за последнюю неделю проблемы со зрением, затрудняющие просмотр телевизора?",
-        "Испытываете ли вы неприятные ощущения в глазах в ветреную погоду?",
-        "Испытываете ли вы неприятные ощущения в глазах в местах с низкой влажностью (сухой воздух)?",
-        "Испытываете ли вы неприятные ощущения в глазах в местах, где работает кондиционер?"
-    )
-
+    private lateinit var finishTestButton: FrameLayout
+    private val viewModel: FourthActivityViewModel by viewModels()
     private val answerOptions = listOf(
         "Постоянно" to 4,
         "Большую часть времени" to 3,
@@ -45,7 +31,6 @@ class FourthActivity : AppCompatActivity() {
         "Никогда" to 0,
         "Затрудняюсь ответить" to 0
     )
-
     private val imageResources = listOf(
         R.drawable.dryeye1,
         R.drawable.dryeye2,
@@ -60,21 +45,38 @@ class FourthActivity : AppCompatActivity() {
         R.drawable.dryeye11,
         R.drawable.dryeye12,
     )
-
-    private var currentQuestionIndex = 0
-    private var totalScore = 0
-    private var answeredQuestions = 0
-
-
+    private var isNightMode = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_fourth)
-        supportActionBar?.hide() // Hide the activity title
+        isNightMode = intent.getBooleanExtra("isNightMode", true) // Получение isNightMode
+        // Устанавливаем тему
+        if (isNightMode) {
+            setTheme(R.style.AppTheme_Night)
+        } else {
+            setTheme(R.style.AppTheme_Day)
+        }
+        // Устанавливаем цвет фона в зависимости от темы
+        val backgroundColor = if (isNightMode) {
+            ContextCompat.getColor(this, R.color.black)
+        } else {
+            ContextCompat.getColor(this, R.color.white)
+        }
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setContentView(R.layout.activity_fourth_landscape)
+        } else {
+            setContentView(R.layout.activity_fourth)
+        }
+        supportActionBar?.hide()
+        window.decorView.setBackgroundColor(backgroundColor)
 
+        // Инициализация UI элементов
         questionTextView = findViewById(R.id.textViewQuestion)
         resultTextView = findViewById(R.id.textViewResult)
         resetButton = findViewById(R.id.resetButton)
         imageViewDryEye = findViewById(R.id.imageViewdryeye)
+        progressBardryeye = findViewById(R.id.progressBardryeye)
+        progressTextdryeye = findViewById(R.id.progressTextdryeye)
+        finishTestButton = findViewById(R.id.finishTestButton)
 
         answerButtons = listOf(
             findViewById(R.id.buttonAlways),
@@ -84,65 +86,64 @@ class FourthActivity : AppCompatActivity() {
             findViewById(R.id.buttonNever),
             findViewById(R.id.buttonCantTell)
         )
-        progressBardryeye = findViewById(R.id.progressBardryeye)
-        progressTextdryeye = findViewById(R.id.progressTextdryeye)
-        resetButton.setOnClickListener { resetQuiz() }
 
-        showQuestion()
-        disableFinishButton() // Деактивируем кнопку при запуске
-        val finishTestButton = findViewById<Button>(R.id.finishTestButton)
+        // Наблюдатели LiveData
+        viewModel.currentQuestionIndex.observe(this) { index ->
+            updateQuestion(index)
+        }
+        viewModel.totalScore.observe(this) {
+            // В данном случае score не используется,
+            // так как результат вычисляется в конце теста
+        }
+        viewModel.resultText.observe(this) { result ->
+            resultTextView.text = result
+            updateResultImage(result)
+        }
+        viewModel.isFinishButtonEnabled.observe(this) { enabled ->
+            finishTestButton.isEnabled = enabled
+        }
+
+        // Обработчики нажатий
+        resetButton.setOnClickListener { viewModel.resetQuiz() }
+
+        for (i in answerOptions.indices) {
+            val textView = answerButtons[i].getChildAt(0) as TextView
+            textView.text = answerOptions[i].first
+            answerButtons[i].setOnClickListener {
+                viewModel.onAnswerClick(answerOptions[i].second)
+            }
+        }
+
         finishTestButton.setOnClickListener {
             saveOsdiResultAndFinish()
         }
+
+        // Вызов updateQuestion после инициализации UI
+        updateQuestion(viewModel.currentQuestionIndex.value ?: 0)
     }
 
+    // Методы обновления UI
     @SuppressLint("SetTextI18n")
-    private fun showQuestion() {
-        val currentQuestion = questions[currentQuestionIndex]
-        questionTextView.text = currentQuestion
-        val progress = (currentQuestionIndex + 1) * 100 / questions.size
-        progressBardryeye.progress = progress
-        progressTextdryeye.text = "Question ${currentQuestionIndex + 1} of ${questions.size}"
-        // Set text and click listeners for answer buttons
-        for (i in answerOptions.indices) {
-            answerButtons[i].text = answerOptions[i].first
-            answerButtons[i].setOnClickListener { onAnswerClick(answerOptions[i].second) }
-        }
-
-        // Set the image for the current question
-        imageViewDryEye.setImageResource(imageResources[currentQuestionIndex])
-    }
-
-    private fun onAnswerClick(score: Int) {
-        totalScore += score
-        answeredQuestions++
-        if (answeredQuestions >= questions.size) {
-            enableFinishButton() // Активируем кнопку, если все вопросы отвечены
-        }
-        currentQuestionIndex++
-        if (currentQuestionIndex < questions.size) {
-            showQuestion()
+    private fun updateQuestion(index: Int) {
+        if (index < viewModel.questions.size) {
+            val currentQuestion = viewModel.questions[index]
+            questionTextView.text = currentQuestion
+            val progress = (index + 1) * 100 / viewModel.questions.size
+            progressBardryeye.progress = progress
+            progressTextdryeye.text = "Question ${index + 1} of ${viewModel.questions.size}"
+            imageViewDryEye.setImageResource(imageResources[index])
+            enableAnswerButtons()
         } else {
-            showResult()
             disableAnswerButtons()
         }
     }
 
-
-    private fun showResult() {
-        val resultText = when (totalScore) {
-            in 0..12 -> "Нормальная поверхность глаза."
-            in 13..22 -> "Лёгкая степень заболевания поверхности глаза."
-            in 23..32 -> "Средняя степень заболевания поверхности глаза."
-            else -> "Тяжелая степень заболевания поверхности глаза."
-        }
-        resultTextView.text = resultText
-
-        // Display the corresponding image based on the result
-        val imageResource = when (totalScore) {
-            in 0..12 -> R.drawable.norm
-            in 13..22 -> R.drawable.soft
-            in 23..32 -> R.drawable.moderate
+    private fun updateResultImage(result: String) {
+        val imageResource = when (result) {
+            "" -> R.drawable.dryeye1 // Отображаем dryeye1, если result пустой
+            "Нормальная поверхность глаза." -> R.drawable.norm
+            "Лёгкая степень заболевания поверхности глаза." -> R.drawable.soft
+            "Средняя степень заболевания поверхности глаза." -> R.drawable.moderate
             else -> R.drawable.severe
         }
         imageViewDryEye.setImageResource(imageResource)
@@ -153,27 +154,6 @@ class FourthActivity : AppCompatActivity() {
             button.isEnabled = false
         }
     }
-    private fun enableFinishButton() {
-        val finishTestButton = findViewById<Button>(R.id.finishTestButton)
-        finishTestButton.isEnabled = true
-    }
-
-    private fun disableFinishButton() {
-        val finishTestButton = findViewById<Button>(R.id.finishTestButton)
-        finishTestButton.isEnabled = false
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun resetQuiz() {
-        currentQuestionIndex = 0
-        totalScore = 0
-        resultTextView.text = ""
-        enableAnswerButtons()
-        showQuestion()
-        disableFinishButton()
-        progressBardryeye.progress = 0
-        progressTextdryeye.text = "Question 1 of ${questions.size}"// Деактивируем кнопку при сбросе
-    }
 
     private fun enableAnswerButtons() {
         for (button in answerButtons) {
@@ -182,17 +162,11 @@ class FourthActivity : AppCompatActivity() {
     }
 
     private fun saveOsdiResultAndFinish() {
-        val resultText = resultTextView.text.toString()
-        val score = totalScore
-
-        // Создаем объект OsdiResult, но не сохраняем его здесь
         val osdiResult = OsdiResult(
             patientProfileId = -1, // ID будет установлен позже
-            score = score,
-            resultText = resultText
+            score = viewModel.totalScore.value ?: 0,
+            resultText = viewModel.resultText.value ?: ""
         )
-
-        // Возвращаемся во SecondActivity и передаем результат OSDI
         val intent = Intent(this, SecondActivity::class.java)
         intent.putExtra("osdiResult", osdiResult)
         setResult(RESULT_OK, intent)

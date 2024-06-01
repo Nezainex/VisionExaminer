@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="black">#121212</color>
+    <color name="gray">#616161</color>
+    <color name="light_gray">#9d9d9d</color>
+    <color name="dark">#222222</color>
+    <color name="white">#e9e9e9</color>
+    <color name="black_overlay">#121212</color> <!-- Black with 50% transparency -->
+    <color name="dayStatusBar">#A28080</color> <!-- White for day theme status bar -->
+    <color name="nightStatusBar">#59b6b3</color> <!-- White for day theme status bar -->
+    <color name="whiteStatusBar">#e9e9e9</color> <!-- White for day theme status bar -->
+
 </resources>

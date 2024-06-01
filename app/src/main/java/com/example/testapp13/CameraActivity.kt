@@ -6,7 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.SurfaceView
-import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -46,8 +46,8 @@ class CameraActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewLis
     }
     private lateinit var cameraBridgeViewBase: CameraBridgeViewBase
     private lateinit var javaCamera2View: JavaCamera2View
-    private lateinit var switchCameraButton: Button
-    private lateinit var refreshButton: Button
+    private lateinit var switchCameraButton: FrameLayout
+    private lateinit var refreshButton: FrameLayout
     private lateinit var strabismusResultTextView: TextView
     private var face: Rect? = null
     private var leftEye: Rect? = null
@@ -65,6 +65,8 @@ class CameraActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewLis
     private var currentCameraId = CameraBridgeViewBase.CAMERA_ID_BACK // Default to back camera
     private var strabismusAnalysisDone = false
     private var frameCounter = 0 // Add a frame counter
+
+    private var isNightMode = true
     data class PupilData(
         var ellipse: RotatedRect,
         var lastSeenFrame: Int = 0,
@@ -78,10 +80,24 @@ class CameraActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewLis
     private var currentStage = DetectionStage.FACE
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        isNightMode = intent.getBooleanExtra("isNightMode", true) // Получение isNightMode
+        // Устанавливаем тему
+        if (isNightMode) {
+            setTheme(R.style.AppTheme_Night)
+        } else {
+            setTheme(R.style.AppTheme_Day)
+        }
+        // Устанавливаем цвет фона в зависимости от темы
+        val backgroundColor = if (isNightMode) {
+            ContextCompat.getColor(this, R.color.black)
+        } else {
+            ContextCompat.getColor(this, R.color.white)
+        }
         setContentView(R.layout.activity_camera)
         supportActionBar?.hide()
-        javaCamera2View = findViewById(R.id.javaCam2View)
+        window.decorView.setBackgroundColor(backgroundColor)
 
+        javaCamera2View = findViewById(R.id.javaCam2View)
         switchCameraButton = findViewById(R.id.switchCameraButton)
         refreshButton = findViewById(R.id.refreshButton)
         strabismusResultTextView = findViewById(R.id.strabismusResultTextView)

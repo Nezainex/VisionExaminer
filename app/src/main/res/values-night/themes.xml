@@ -1,7 +1,10 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.TestApp13" parent="Theme.Material3.DayNight.NoActionBar">
+<resources>
+    <!-- Базовая тема -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Ваши стили -->
+    </style>
 
-        
+    <style name="AppTheme.Dark" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <!-- Ваши стили для тёмной темы -->
     </style>
 </resources>

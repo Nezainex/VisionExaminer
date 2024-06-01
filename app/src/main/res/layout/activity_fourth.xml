@@ -47,87 +47,175 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.546" />
 
-        <Button
+        <!-- Button Always -->
+        <FrameLayout
             android:id="@+id/buttonAlways"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:textSize="20sp"
             android:layout_marginBottom="360dp"
-            android:text="@string/buttonAlways"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/osdi_inside_buttons_background"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent">
 
-        <Button
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/buttonAlways"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white" />
+        </FrameLayout>
+
+        <!-- Button Most of the time -->
+        <FrameLayout
             android:id="@+id/buttonMostofthetime"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:textSize="20sp"
             android:layout_marginBottom="300dp"
-            android:text="@string/buttonMostofthetime"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/osdi_inside_buttons_background"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent">
 
-        <Button
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/buttonMostofthetime"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white" />
+        </FrameLayout>
+
+        <!-- Button Half time -->
+        <FrameLayout
             android:id="@+id/buttonHalftime"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:textSize="16sp"
             android:layout_marginBottom="240dp"
-            android:text="@string/buttonHalftime"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/osdi_inside_buttons_background"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent">
 
-        <Button
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/buttonHalftime"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/white" />
+        </FrameLayout>
+
+        <!-- Button Sometimes -->
+        <FrameLayout
             android:id="@+id/buttonSometimes"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:textSize="20sp"
             android:layout_marginBottom="180dp"
-            android:text="@string/buttonSometimes"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/osdi_inside_buttons_background"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent">
 
-        <Button
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/buttonSometimes"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white" />
+        </FrameLayout>
+
+        <!-- Button Never -->
+        <FrameLayout
             android:id="@+id/buttonNever"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:textSize="20sp"
             android:layout_marginBottom="120dp"
-            android:text="@string/buttonNever"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/osdi_inside_buttons_background"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent">
 
-        <Button
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/buttonNever"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white" />
+        </FrameLayout>
+
+        <!-- Button Can't Tell -->
+        <FrameLayout
             android:id="@+id/buttonCantTell"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginBottom="60dp"
-            android:text="@string/buttonCantTell"
-            android:textSize="20sp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/osdi_inside_buttons_background"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent">
 
-        <Button
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/buttonCantTell"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white" />
+        </FrameLayout>
+
+        <!-- Reset Button -->
+        <FrameLayout
             android:id="@+id/resetButton"
             android:layout_width="200dp"
             android:layout_height="60dp"
-            android:text="@string/buttonReset"
-            android:textSize="20sp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/osdi_inside_buttons_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent">
 
-        <Button
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/buttonReset"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white" />
+        </FrameLayout>
+
+        <!-- Finish Test Button -->
+        <FrameLayout
             android:id="@+id/finishTestButton"
             android:layout_width="200dp"
             android:layout_height="60dp"
-            android:text="@string/finish_Test_Button"
-            android:textSize="20sp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/osdi_inside_buttons_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/finish_Test_Button"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/white" />
+        </FrameLayout>
 
         <ProgressBar
             android:id="@+id/progressBardryeye"

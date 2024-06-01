@@ -3,9 +3,12 @@ package com.example.testapp13
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
-import android.widget.*
+import android.util.Log
+import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
@@ -13,74 +16,79 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import android.util.Log
 
-@Suppress("DEPRECATION")
 class FifthActivity : AppCompatActivity() {
 
-    private lateinit var patientslisttextView: TextView
+    private lateinit var patientsListTextView: TextView
     private lateinit var profilesRecyclerView: RecyclerView
-    private lateinit var sortSpinner: Spinner
     private lateinit var searchEditText: EditText
 
-    private var profilesList: MutableList<PatientProfile> = mutableListOf() // List of patient profiles
+    private var profilesList: MutableList<PatientProfile> = mutableListOf()
+    private var currentGreenButtonId: Int = -1
+    private var isNightMode = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        isNightMode = intent.getBooleanExtra("isNightMode", true)
+        setTheme(if (isNightMode) R.style.AppTheme_Night else R.style.AppTheme_Day)
+        val backgroundColor = if (isNightMode) ContextCompat.getColor(this, R.color.black) else ContextCompat.getColor(this, R.color.white)
+
         setContentView(R.layout.activity_fifth)
-
-        val newProfile = intent.getParcelableExtra<PatientProfile>("profile")
-        if (newProfile != null) {
-            // Add the new profile to your profilesList
-            profilesList.add(newProfile)
-            // Update the adapter
-            val adapter = profilesRecyclerView.adapter as? PatientProfileAdapter
-            adapter?.updateProfiles(profilesList)
-        }
-
         supportActionBar?.hide()
+        window.decorView.setBackgroundColor(backgroundColor)
 
         searchEditText = findViewById(R.id.search_edit_text)
-        patientslisttextView = findViewById(R.id.patients_list_text_View)
-        profilesRecyclerView = findViewById(R.id.profiles_recycler_view) // Assuming the ID in your layout
-        profilesRecyclerView.layoutManager = LinearLayoutManager(this) // Set a layout manager
-        sortSpinner = findViewById(R.id.sort_spinner)
+        patientsListTextView = findViewById(R.id.patients_list_text_View)
+        profilesRecyclerView = findViewById(R.id.profiles_recycler_view)
+        profilesRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Load profiles from storage (replace with your actual loading logic)
         CoroutineScope(Dispatchers.Main).launch {
             loadProfiles().collect { profiles ->
                 profilesList = profiles.toMutableList()
-
-                // Create and set the adapter only after profiles are loaded
-                val adapter = PatientProfileAdapter(profilesList, this@FifthActivity)
-                profilesRecyclerView.adapter = adapter
-
-                updateProfilesList(SortOption.DATE_DESC) // Initial sort
+                profilesRecyclerView.adapter = PatientProfileAdapter(profilesList, this@FifthActivity, isNightMode)
+                updateProfilesList(SortOption.DATE_DESC)
             }
         }
 
-        // Set up initial list adapter
-        updateProfilesList(SortOption.DATE_DESC)
+        setupSortButtons()
+        setupSearchEditText()
 
-        // Set up sort spinner
-        val sortOptions = arrayOf(
-            "Отобразить с самого давнего осмотра",
-            "Отобразить с самого недавнего осмотра",
-            "Отобразить по фамилии в алфавитном порядке",
-            "Отобразить с наибольшего возраста",
-            "Отобразить с наименьшего возраста"
+        intent.getParcelableExtra<PatientProfile>("profile")?.let {
+            profilesList.add(it)
+            (profilesRecyclerView.adapter as? PatientProfileAdapter)?.updateProfiles(profilesList)
+        }
+    }
+
+    private suspend fun loadProfiles(): Flow<List<PatientProfile>> {
+        val database = DatabaseInstance.getInstance(this)
+        val profilesFlow = database.patientProfileDao().getAllProfiles()
+        Log.d("FifthActivity", "Number of profiles retrieved: ${profilesFlow.first().size}")
+        return profilesFlow
+    }
+
+    private fun setupSortButtons() {
+        val sortButtons = mapOf(
+            R.id.sort_button_date_desc to SortOption.DATE_DESC,
+            R.id.sort_button_date_asc to SortOption.DATE_ASC,
+            R.id.sort_button_last_name to SortOption.LAST_NAME,
+            R.id.sort_button_age_desc to SortOption.AGE_DESC,
+            R.id.sort_button_age_asc to SortOption.AGE_ASC
         )
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, sortOptions)
-        sortSpinner.adapter = adapter
 
-        sortSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val selectedOption = SortOption.entries[position]
-                updateProfilesList(selectedOption)
+        sortButtons.keys.forEach { buttonId ->
+            val button = findViewById<FrameLayout>(buttonId)
+            button.setOnClickListener {
+                if (currentGreenButtonId != -1) {
+                    findViewById<FrameLayout>(currentGreenButtonId).setBackgroundResource(R.drawable.button4_red)
+                }
+                currentGreenButtonId = buttonId
+                button.setBackgroundResource(R.drawable.button4_green)
+                updateProfilesList(sortButtons[buttonId]!!)
             }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+    }
+
+    private fun setupSearchEditText() {
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 filterProfiles(s.toString())
@@ -91,19 +99,7 @@ class FifthActivity : AppCompatActivity() {
         })
     }
 
-    private suspend fun loadProfiles(): Flow<List<PatientProfile>> {
-        val database = DatabaseInstance.getInstance(this)
-        val profilesFlow = database.patientProfileDao().getAllProfiles()
-
-        // Log the number of profiles retrieved once
-        val profilesList = profilesFlow.first() // Get the first emitted list
-        Log.d("FifthActivity", "Number of profiles retrieved: ${profilesList.size}")
-
-        return profilesFlow
-    }
-
     private fun updateProfilesList(sortOption: SortOption) {
-        // Sort profiles based on selected option
         when (sortOption) {
             SortOption.DATE_DESC -> profilesList.sortByDescending { it.examinationdate }
             SortOption.DATE_ASC -> profilesList.sortBy { it.examinationdate }
@@ -112,27 +108,20 @@ class FifthActivity : AppCompatActivity() {
             SortOption.AGE_ASC -> profilesList.sortBy { it.age }
         }
         Log.d("FifthActivity", "Number of profiles in list: ${profilesList.size}")
-        // Update the adapter with the entire profilesList
-        val adapter = profilesRecyclerView.adapter as? PatientProfileAdapter
-        adapter?.updateProfiles(profilesList)
+        (profilesRecyclerView.adapter as? PatientProfileAdapter)?.updateProfiles(profilesList)
     }
 
-    // Enum for sorting options
+    private fun filterProfiles(query: String) {
+        val filteredProfiles = profilesList.filter { profile ->
+            profile.lastName.contains(query, ignoreCase = true) ||
+                    profile.firstName.contains(query, ignoreCase = true) ||
+                    profile.middleName.contains(query, ignoreCase = true) ||
+                    profile.age.toString().contains(query)
+        }
+        (profilesRecyclerView.adapter as? PatientProfileAdapter)?.updateProfiles(filteredProfiles)
+    }
+
     private enum class SortOption {
         DATE_DESC, DATE_ASC, LAST_NAME, AGE_DESC, AGE_ASC
     }
-    private fun filterProfiles(query: String) {
-            val filteredProfiles = profilesList.filter { profile ->
-                profile.lastName.contains(query, ignoreCase = true) ||
-                        profile.firstName.contains(query, ignoreCase = true) ||
-                        profile.middleName.contains(query, ignoreCase = true) ||
-                        profile.age.toString().contains(query)
-            }
-            // Update the adapter with the filtered list
-            val adapter = profilesRecyclerView.adapter as? PatientProfileAdapter
-            adapter?.updateProfiles(filteredProfiles)
-            // Handle the case where searchEditText is not initialized
-            // You might log an error or show a message to the user.
-    }
 }
-

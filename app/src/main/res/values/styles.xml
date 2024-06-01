@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/black_overlay</item>
+        <item name="colorPrimaryDark">@color/black_overlay</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <!-- Day theme -->
+    <style name="AppTheme.Day" parent="AppTheme">
+        <item name="android:statusBarColor">@color/dayStatusBar</item>
+        <item name="android:textColor">@color/black</item>  <!-- Применяем стиль AppTheme.Day для текстовых элементов -->
+        <item name="selectableItemBackground">@drawable/text_frame_day_background</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">@color/black</item>
+        <item name="android:textColorHint">@color/black</item>
+    </style>
+
+    <!-- Night theme -->
+    <style name="AppTheme.Night" parent="AppTheme">
+        <item name="android:statusBarColor">@color/black</item>
+        <item name="android:textColor">@color/white</item>  <!-- Применяем стиль AppTheme.Night для текстовых элементов -->
+        <item name="selectableItemBackground">@drawable/text_frame_night_background</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:textColorHint">@color/white</item>
+    </style>
+
+</resources>

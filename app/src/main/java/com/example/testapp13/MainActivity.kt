@@ -1,84 +1,106 @@
 package com.example.testapp13
 
+import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.res.Configuration
+import android.media.AudioManager
+import android.net.Uri
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.Button
-import android.widget.ImageView
-import androidx.appcompat.app.AppCompatDelegate
-
+import android.widget.FrameLayout
+import android.widget.VideoView
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
 
 class MainActivity : AppCompatActivity() {
 
-    private var currentTheme = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-    private lateinit var themeToggleImageView: ImageView
+    private val viewModel: MainActivityViewModel by viewModels()
 
+    private lateinit var themeToggleFrameLayout: FrameLayout
+    private lateinit var videoView: VideoView
+
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        // Set status bar color and transparency BEFORE setContentView()
+        WindowCompat.setDecorFitsSystemWindows(window, false) // Hide status bar
 
-        supportActionBar?.hide() //эта штука нужна, чтоб скрыть название активити сверху
+        setContentViewBasedOnOrientation()
 
-        themeToggleImageView = findViewById(R.id.theme_toggle_image_view) // Initialize
-        updateThemeToggleImage() // Set initial image based on current theme
-        themeToggleImageView.contentDescription = getString(R.string.theme_toggle_description)
-        themeToggleImageView.setOnClickListener {
-            toggleTheme()
+        supportActionBar?.hide()
+
+        themeToggleFrameLayout = findViewById(R.id.theme_toggle_frame_layout)
+        videoView = findViewById(R.id.video_view)
+
+        viewModel.isNightMode.observe(this) { isNightMode ->
+            updateUIForTheme(isNightMode)
         }
 
-        val newProfileButton = findViewById<Button>(R.id.new_profile_button)
-        val loadProfileButton = findViewById<Button>(R.id.load_profile_button)
+        viewModel.videoUri.observe(this) { uri ->
+            setVideoUri(uri)
+        }
 
-        // Set click listener on the button
-        newProfileButton.setOnClickListener {
-            // Create an intent to launch SecondActivity
+        themeToggleFrameLayout.setOnTouchListener { _, event ->
+            when (event.action) {
+                android.view.MotionEvent.ACTION_DOWN -> {
+                    updateThemeButton(viewModel.isNightMode.value ?: true, true) // Show pressed state
+                    true // Consume touch event
+                }
+                android.view.MotionEvent.ACTION_UP -> {
+                    viewModel.toggleTheme() // Toggle theme
+                    themeToggleFrameLayout.performClick() // Call performClick()
+                    true // Consume touch event
+                }
+                else -> false // Don't consume other events
+            }
+        }
+
+        findViewById<FrameLayout>(R.id.new_profile_button).setOnClickListener {
             val intent = Intent(this, SecondActivity::class.java)
-            // Start the activity
+            intent.putExtra("isNightMode", viewModel.isNightMode.value) // Передача isNightMode
             startActivity(intent)
         }
 
-        loadProfileButton.setOnClickListener {
-            // Create an intent to launch FifthActivity
+        findViewById<FrameLayout>(R.id.load_profile_button).setOnClickListener {
             val intent = Intent(this, FifthActivity::class.java)
-            // Start the activity
+            intent.putExtra("isNightMode", viewModel.isNightMode.value) // Передача isNightMode
             startActivity(intent)
+        }
+
+        themeToggleFrameLayout.isSelected = viewModel.isNightMode.value ?: true
+    }
+
+    private fun setContentViewBasedOnOrientation() {
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setContentView(R.layout.activity_main_landscape)
+        } else {
+            setContentView(R.layout.activity_main)
         }
     }
-        // Create options menu
-        override fun onCreateOptionsMenu(menu: Menu): Boolean {
-            menuInflater.inflate(R.menu.main_menu, menu)
-            return true
-        }
 
-        // Handle menu item selection
-        override fun onOptionsItemSelected(item: MenuItem): Boolean {
-            return when (item.itemId) {
-                R.id.toggle_theme -> {
-                    toggleTheme()
-                    true
-                }
-                else -> super.onOptionsItemSelected(item)
-            }
-        }
+    private fun updateUIForTheme(isNightMode: Boolean) {
+        setTheme(if (isNightMode) R.style.AppTheme_Night else R.style.AppTheme_Day)
+        window.statusBarColor = ContextCompat.getColor(this, if (isNightMode) R.color.black else R.color.dayStatusBar)
+        themeToggleFrameLayout.background = ContextCompat.getDrawable(this, if (isNightMode) R.drawable.text_frame_night_background else R.drawable.text_frame_day_background)
+        updateThemeButton(isNightMode, false)
+    }
 
-        private fun toggleTheme() {
-            currentTheme = when (currentTheme) {
-                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM -> AppCompatDelegate.MODE_NIGHT_YES
-                AppCompatDelegate.MODE_NIGHT_YES -> AppCompatDelegate.MODE_NIGHT_NO
-                else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-            }
-            AppCompatDelegate.setDefaultNightMode(currentTheme)
-            updateThemeToggleImage() // Update image after theme change
+    private fun updateThemeButton(isNightMode: Boolean, isPressed: Boolean) {
+        val resourceId = if (isNightMode) {
+            if (isPressed) R.drawable.night_blue_pressed else R.drawable.night_blue
+        } else {
+            if (isPressed) R.drawable.day_red_pressed else R.drawable.day_red
         }
+        themeToggleFrameLayout.background = ContextCompat.getDrawable(this, resourceId)
+    }
 
-        private fun updateThemeToggleImage() {
-            if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-                themeToggleImageView.setImageResource(R.drawable.moon) // Dark theme image
-            } else {
-                themeToggleImageView.setImageResource(R.drawable.sun) // Light theme image
-            }
+    private fun setVideoUri(uri: Uri) {
+        videoView.setAudioFocusRequest(AudioManager.AUDIOFOCUS_NONE)
+        videoView.setVideoURI(uri)
+        videoView.setOnPreparedListener { mp ->
+            mp.isLooping = true
+            mp.start()
         }
+    }
 }
-
