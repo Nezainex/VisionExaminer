@@ -1,4 +1,4 @@
-package com.example.VisionExaminer
+package com.example.visionExaminer.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -11,6 +11,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.example.visionExaminer.R
+import com.example.visionExaminer.data.IshiharaResult
+import com.example.visionExaminer.viewmodel.SeventhActivityViewModel
 
 class SeventhActivity : AppCompatActivity() {
     data class IshiharaImage(

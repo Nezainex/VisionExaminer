@@ -1,4 +1,4 @@
-package com.example.VisionExaminer
+package com.example.visionExaminer.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +8,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.example.visionExaminer.R
+import com.example.visionExaminer.data.MidriaticResult
+import com.example.visionExaminer.viewmodel.NinthActivityViewModel
 
 class NinthActivity : AppCompatActivity() {
 
@@ -64,7 +67,9 @@ class NinthActivity : AppCompatActivity() {
         // Установка темы перед вызовом setContentView
         setTheme(if (isNightMode) R.style.AppTheme_Night else R.style.AppTheme_Day)
         Log.d("NinthActivity", "Theme set to: ${if (isNightMode) "Night" else "Day"}")
-        val backgroundColor = if (isNightMode) ContextCompat.getColor(this, R.color.black) else ContextCompat.getColor(this, R.color.white)
+        val backgroundColor = if (isNightMode) ContextCompat.getColor(this, R.color.black) else ContextCompat.getColor(this,
+            R.color.white
+        )
 
         setContentView(R.layout.activity_ninth)
         supportActionBar?.hide()
@@ -195,7 +200,9 @@ class NinthActivity : AppCompatActivity() {
         // Тропикамид 1%
         if (age < 6) {
             tropicamideOnePercentTextView.text = "Нельзя пациентам до 6 лет"
-            tropicamideOnePercentButtonTextView.setTextColor(ContextCompat.getColor(this, R.color.red))
+            tropicamideOnePercentButtonTextView.setTextColor(ContextCompat.getColor(this,
+                R.color.red
+            ))
         } else {
             tropicamideOnePercentTextView.text = ""
         }
@@ -214,7 +221,9 @@ class NinthActivity : AppCompatActivity() {
         // Цикломед 1%
         if (age < 3) {
             cyclomedOnePercentTextView.text = "С осторожностью пациентам до 3 лет"
-            cyclomedOnePercentButtonTextView.setTextColor(ContextCompat.getColor(this, R.color.yellow))
+            cyclomedOnePercentButtonTextView.setTextColor(ContextCompat.getColor(this,
+                R.color.yellow
+            ))
         } else {
             cyclomedOnePercentTextView.text = ""
         }
@@ -222,10 +231,14 @@ class NinthActivity : AppCompatActivity() {
         // Циклопентолат 1%
         if (age < 3) {
             cyclopentolateOnePercentTextView.text = "Нельзя пациентам до 3 лет"
-            cyclopentolateOnePercentButtonTextView.setTextColor(ContextCompat.getColor(this, R.color.red))
+            cyclopentolateOnePercentButtonTextView.setTextColor(ContextCompat.getColor(this,
+                R.color.red
+            ))
         } else if (age >= 60) {
             cyclopentolateOnePercentTextView.text = "С осторожностью пациентам пожилого возраста"
-            cyclopentolateOnePercentButtonTextView.setTextColor(ContextCompat.getColor(this, R.color.yellow))
+            cyclopentolateOnePercentButtonTextView.setTextColor(ContextCompat.getColor(this,
+                R.color.yellow
+            ))
         } else {
             cyclopentolateOnePercentTextView.text = ""
         }
@@ -233,10 +246,14 @@ class NinthActivity : AppCompatActivity() {
         // Атропина сульфат 1%
         if (age < 7) {
             atropineSulfateOnePercentTextView.text = "Нельзя пациентам младше 7 лет"
-            atropineSulfateOnePercentButtonTextView.setTextColor(ContextCompat.getColor(this, R.color.red))
+            atropineSulfateOnePercentButtonTextView.setTextColor(ContextCompat.getColor(this,
+                R.color.red
+            ))
         } else if (age >= 40) {
             "С осторожностью у пациентов старше 40 лет".also { atropineSulfateOnePercentTextView.text = it }
-            atropineSulfateOnePercentButtonTextView.setTextColor(ContextCompat.getColor(this, R.color.yellow))
+            atropineSulfateOnePercentButtonTextView.setTextColor(ContextCompat.getColor(this,
+                R.color.yellow
+            ))
         } else {
             atropineSulfateOnePercentTextView.text = ""
         }
@@ -244,7 +261,9 @@ class NinthActivity : AppCompatActivity() {
         //  Ирифрин 2,5%
         if (age < 6) {
             irifrinTwoAndAHalfPercentTextView.text = "Нельзя пациентам до 6 лет"
-            irifrinTwoAndAHalfPercentButtonTextView.setTextColor(ContextCompat.getColor(this, R.color.red))
+            irifrinTwoAndAHalfPercentButtonTextView.setTextColor(ContextCompat.getColor(this,
+                R.color.red
+            ))
         } else {
             irifrinTwoAndAHalfPercentTextView.text = ""
         }
@@ -252,7 +271,9 @@ class NinthActivity : AppCompatActivity() {
         //  Ирифрин БК 2,5%
         if (age < 6) {
             irifrinWithoutPreservativeTwoAndAHalfPercentTextView.text = "Нельзя пациентам до 6 лет"
-            irifrinWithoutPreservativeTwoAndAHalfPercentButtonTextView.setTextColor(ContextCompat.getColor(this, R.color.red))
+            irifrinWithoutPreservativeTwoAndAHalfPercentButtonTextView.setTextColor(ContextCompat.getColor(this,
+                R.color.red
+            ))
         } else {
             irifrinWithoutPreservativeTwoAndAHalfPercentTextView.text = ""
         }
@@ -261,7 +282,9 @@ class NinthActivity : AppCompatActivity() {
         // Фенилэфрин 10%
         if (age < 12) {
             "Нельзя пациентам младше 12 лет".also { phenylephrineTenPercentTextView.text = it }
-            phenylephrineTenPercentButtonTextView.setTextColor(ContextCompat.getColor(this, R.color.red))
+            phenylephrineTenPercentButtonTextView.setTextColor(ContextCompat.getColor(this,
+                R.color.red
+            ))
         } else {
             phenylephrineTenPercentTextView.text = ""
         }
@@ -269,7 +292,9 @@ class NinthActivity : AppCompatActivity() {
         //Мидримакс 2,5%
         if (age < 12) {
             "Нельзя пациентам младше 12 лет".also { mydrimaxTwoAndAHalfPercentTextView.text = it }
-            mydrimaxTwoAndAHalfPercentButtonTextView.setTextColor(ContextCompat.getColor(this, R.color.red))
+            mydrimaxTwoAndAHalfPercentButtonTextView.setTextColor(ContextCompat.getColor(this,
+                R.color.red
+            ))
         } else {
             mydrimaxTwoAndAHalfPercentTextView.text = ""
         }

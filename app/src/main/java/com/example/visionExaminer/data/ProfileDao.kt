@@ -1,4 +1,4 @@
-package com.example.VisionExaminer
+package com.example.visionExaminer.data
 
 import androidx.room.Dao
 import androidx.room.Delete

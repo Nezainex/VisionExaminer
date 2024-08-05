@@ -1,4 +1,4 @@
-package com.example.VisionExaminer
+package com.example.visionExaminer.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,6 +9,9 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.visionExaminer.R
+import com.example.visionExaminer.data.DatabaseInstance
+import com.example.visionExaminer.data.PatientProfile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

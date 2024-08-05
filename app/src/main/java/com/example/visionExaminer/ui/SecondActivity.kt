@@ -1,5 +1,5 @@
 @file:Suppress("DEPRECATION")
-package com.example.VisionExaminer
+package com.example.visionExaminer.ui
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
@@ -22,6 +22,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.example.visionExaminer.R
+import com.example.visionExaminer.data.DatabaseInstance
+import com.example.visionExaminer.data.MidriaticResult
+import com.example.visionExaminer.data.PatientProfile
+import com.example.visionExaminer.viewmodel.SecondActivityViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -183,12 +188,24 @@ class SecondActivity : AppCompatActivity(), TextView.OnEditorActionListener, Ada
         sphOSLabel = findViewById(R.id.sphOS_label)
         cylOSLabel = findViewById(R.id.cylOS_label)
         axOSLabel = findViewById(R.id.axOS_label)
-        sphODLabel.setTextColor(if (isNightMode) ContextCompat.getColor(this, R.color.white) else ContextCompat.getColor(this, R.color.black))
-        cylODLabel.setTextColor(if (isNightMode) ContextCompat.getColor(this, R.color.white) else ContextCompat.getColor(this, R.color.black))
-        axODLabel.setTextColor(if (isNightMode) ContextCompat.getColor(this, R.color.white) else ContextCompat.getColor(this, R.color.black))
-        sphOSLabel.setTextColor(if (isNightMode) ContextCompat.getColor(this, R.color.white) else ContextCompat.getColor(this, R.color.black))
-        cylOSLabel.setTextColor(if (isNightMode) ContextCompat.getColor(this, R.color.white) else ContextCompat.getColor(this, R.color.black))
-        axOSLabel.setTextColor(if (isNightMode) ContextCompat.getColor(this, R.color.white) else ContextCompat.getColor(this, R.color.black))
+        sphODLabel.setTextColor(if (isNightMode) ContextCompat.getColor(this, R.color.white) else ContextCompat.getColor(this,
+            R.color.black
+        ))
+        cylODLabel.setTextColor(if (isNightMode) ContextCompat.getColor(this, R.color.white) else ContextCompat.getColor(this,
+            R.color.black
+        ))
+        axODLabel.setTextColor(if (isNightMode) ContextCompat.getColor(this, R.color.white) else ContextCompat.getColor(this,
+            R.color.black
+        ))
+        sphOSLabel.setTextColor(if (isNightMode) ContextCompat.getColor(this, R.color.white) else ContextCompat.getColor(this,
+            R.color.black
+        ))
+        cylOSLabel.setTextColor(if (isNightMode) ContextCompat.getColor(this, R.color.white) else ContextCompat.getColor(this,
+            R.color.black
+        ))
+        axOSLabel.setTextColor(if (isNightMode) ContextCompat.getColor(this, R.color.white) else ContextCompat.getColor(this,
+            R.color.black
+        ))
         osdiResultTextView = findViewById(R.id.osdi_result_text_view)
         rabkinResultTextView = findViewById(R.id.rabkin_result_text_view)
         ishiharaResultTextView = findViewById(R.id.ishihara_result_text_view)

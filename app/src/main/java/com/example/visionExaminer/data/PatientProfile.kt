@@ -1,4 +1,4 @@
-package com.example.VisionExaminer
+package com.example.visionExaminer.data
 
 import android.os.Parcel
 import android.os.Parcelable

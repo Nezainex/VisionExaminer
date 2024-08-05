@@ -1,4 +1,4 @@
-package com.example.VisionExaminer
+package com.example.visionExaminer.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -11,6 +11,9 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.visionExaminer.R
+import com.example.visionExaminer.data.OsdiResult
+import com.example.visionExaminer.viewmodel.FourthActivityViewModel
 
 class FourthActivity : AppCompatActivity() {
 

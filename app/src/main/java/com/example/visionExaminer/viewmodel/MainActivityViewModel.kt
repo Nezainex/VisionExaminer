@@ -1,10 +1,11 @@
-package com.example.VisionExaminer
+package com.example.visionExaminer.viewmodel
 
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.visionExaminer.R
 
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
 

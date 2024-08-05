@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">VisionExaminer</string>
+    <string name="app_name">visionExaminer</string>
 
     <string name="second_act_button_str">Транспозиция</string>
     <string name="third_act_button_str">Острота зрения и аметропии</string>

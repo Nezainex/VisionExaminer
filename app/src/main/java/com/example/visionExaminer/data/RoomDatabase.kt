@@ -1,4 +1,4 @@
-package com.example.VisionExaminer
+package com.example.visionExaminer.data
 
 import android.content.Context
 import androidx.room.Database

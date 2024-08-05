@@ -1,6 +1,9 @@
-package com.example.VisionExaminer
+package com.example.visionExaminer.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.example.visionExaminer.data.IshiharaResult
+import com.example.visionExaminer.data.OsdiResult
+import com.example.visionExaminer.data.RabkinResult
 
 class SecondActivityViewModel : ViewModel() {
     var birthDate: String = ""

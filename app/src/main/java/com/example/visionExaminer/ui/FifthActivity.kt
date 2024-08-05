@@ -1,4 +1,4 @@
-package com.example.VisionExaminer
+package com.example.visionExaminer.ui
 
 import android.os.Bundle
 import android.text.Editable
@@ -11,6 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.visionExaminer.R
+import com.example.visionExaminer.data.DatabaseInstance
+import com.example.visionExaminer.data.PatientProfile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -31,7 +34,9 @@ class FifthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         isNightMode = intent.getBooleanExtra("isNightMode", true)
         setTheme(if (isNightMode) R.style.AppTheme_Night else R.style.AppTheme_Day)
-        val backgroundColor = if (isNightMode) ContextCompat.getColor(this, R.color.black) else ContextCompat.getColor(this, R.color.white)
+        val backgroundColor = if (isNightMode) ContextCompat.getColor(this, R.color.black) else ContextCompat.getColor(this,
+            R.color.white
+        )
 
         setContentView(R.layout.activity_fifth)
         supportActionBar?.hide()

@@ -1,7 +1,9 @@
-package com.example.VisionExaminer
+package com.example.visionExaminer.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.visionExaminer.R
+import com.example.visionExaminer.ui.SeventhActivity
 
 class SeventhActivityViewModel : ViewModel() {
 

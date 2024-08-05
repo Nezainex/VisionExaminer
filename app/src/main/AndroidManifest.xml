@@ -19,31 +19,31 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
-            android:name=".NinthActivity"
+            android:name=".ui.NinthActivity"
             android:exported="false" />
         <activity
-            android:name=".CameraActivity"
+            android:name=".ui.CameraActivity"
             android:exported="false" />
         <activity
-            android:name=".SeventhActivity"
+            android:name=".ui.SeventhActivity"
             android:exported="false" />
         <activity
-            android:name=".SixthActivity"
+            android:name=".ui.SixthActivity"
             android:exported="false" />
         <activity
-            android:name=".FifthActivity"
+            android:name=".ui.FifthActivity"
             android:exported="false" />
         <activity
-            android:name=".FourthActivity"
+            android:name=".ui.FourthActivity"
             android:exported="false" />
         <activity
-            android:name=".ThirdActivity"
+            android:name=".ui.ThirdActivity"
             android:exported="false" />
         <activity
-            android:name=".SecondActivity"
+            android:name=".ui.SecondActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
