@@ -1,12 +1,12 @@
-package com.example.testapp13
+package com.example.VisionExaminer
 
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "rabkin_results")
-data class RabkinResult(
+@Entity(tableName = "ishihara_results")
+data class IshiharaResult(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     var patientProfileId: Int, // Связь с профилем пациента
     val score: Int,
@@ -31,12 +31,12 @@ data class RabkinResult(
         return 0
     }
 
-    companion object CREATOR : Parcelable.Creator<RabkinResult> {
-        override fun createFromParcel(parcel: Parcel): RabkinResult {
-            return RabkinResult(parcel)
+    companion object CREATOR : Parcelable.Creator<IshiharaResult> {
+        override fun createFromParcel(parcel: Parcel): IshiharaResult {
+            return IshiharaResult(parcel)
         }
 
-        override fun newArray(size: Int): Array<RabkinResult?> {
+        override fun newArray(size: Int): Array<IshiharaResult?> {
             return arrayOfNulls(size)
         }
     }

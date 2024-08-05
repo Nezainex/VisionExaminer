@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "TestApp13"
+rootProject.name = "VisionExaminer"
 include(":app")
  

@@ -1,4 +1,4 @@
-package com.example.testapp13
+package com.example.VisionExaminer
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

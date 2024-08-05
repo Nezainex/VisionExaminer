@@ -1,4 +1,4 @@
-package com.example.testapp13
+package com.example.VisionExaminer
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -35,7 +35,7 @@ data class PatientProfile(
     val cylOSLabel: String,
     val axOSLabel: String,
     val comparesphResult: String,
-    val midriaticAgent: String
+    val midriaticAgent: String,
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(

@@ -1,6 +1,5 @@
-package com.example.testapp13
+package com.example.VisionExaminer
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
@@ -8,7 +7,6 @@ class NinthActivityViewModel : ViewModel() {
     // LiveData to hold the selected midriatic agent
     var midriaticAgent: String = ""
     private val _selectedMidriaticAgent = MutableLiveData<String>()
-    val selectedMidriaticAgent: LiveData<String> get() = _selectedMidriaticAgent
 
     // Function to update the midriatic agent
     fun updateMidriaticAgent(agent: String) {

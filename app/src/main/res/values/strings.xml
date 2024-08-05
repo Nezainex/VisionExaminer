@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TestApp13</string>
+    <string name="app_name">VisionExaminer</string>
 
     <string name="second_act_button_str">Транспозиция</string>
     <string name="third_act_button_str">Острота зрения и аметропии</string>
@@ -134,7 +134,7 @@
     <string name="Irifrin_without_preservative_two_and_a_half_percent">ирифрин БК 2,5%</string>
     <string name="Tropicamide_two_and_a_half_percent">тропикамид 2,5%</string>
     <string name="Mydrimax_two_and_a_half_percent">мидримакс 2,5%</string>
-    <string name="Phenylephrine_two_and_a_half_percent">фенилэфрин 2,5%</string>
+    <string name="Phenylephrine_ten_percent">Фенилэфрин 10%</string>
 
     <string name="sixth_act_button_str">Тест цветоощущения Рабкина</string>
     <string name="textViewQuestionrabkin">Что изображено на рисунке?</string>
@@ -155,7 +155,13 @@
     <string name="sort_age_asc">Отобразить с наименьшего возраста</string>
     <string name="male">М</string>
     <string name="female">Ж</string>
+
     <string name="choose_midriatic">Выберите мидриатик</string>
+    <string name="tonometry_button_textView">Тонометрия</string>
+    <string name="tonometryNonContactODTextView">Бесконтактная тонометрия OD</string>
+    <string name="tonometryNonContactOSTextView">Бесконтактная тонометрия OS</string>
+    <string name="tonometryContactODTextView">Контактная тонометрия OD</string>
+    <string name="tonometryContactOSTextView">Контактная тонометрия OS</string>
 
 
 </resources>

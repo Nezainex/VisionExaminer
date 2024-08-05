@@ -1,4 +1,4 @@
-package com.example.testapp13
+package com.example.VisionExaminer
 
 import androidx.lifecycle.ViewModel
 
@@ -60,7 +60,6 @@ class SecondActivityViewModel : ViewModel() {
     var osdiResult: OsdiResult? = null
     var rabkinResult: RabkinResult? = null
     var ishiharaResult: IshiharaResult? = null
-
     fun updateBirthDate(newDate: String) {
         birthDate = newDate
     }

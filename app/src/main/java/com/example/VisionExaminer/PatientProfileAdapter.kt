@@ -1,4 +1,4 @@
-package com.example.testapp13
+package com.example.VisionExaminer
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -17,7 +17,7 @@ import kotlinx.coroutines.withContext
 class PatientProfileAdapter(
     private var profiles: List<PatientProfile>,
     private val context: Context,
-    private val isNightMode: Boolean
+    var isNightMode: Boolean // Тема адаптера
 ) : RecyclerView.Adapter<PatientProfileAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -41,6 +41,7 @@ class PatientProfileAdapter(
             val nameText = "${currentProfile.lastName} ${currentProfile.firstName} ${currentProfile.middleName}"
             val genderText = if (currentProfile.gender == "Мужской") "муж." else "жен."
             val ageDateText = formatAgeAndDate(currentProfile.age, currentProfile.examinationdate)
+
             viewHolder.textView.text = "$nameText\n($genderText) $ageDateText\nДата рождения: ${currentProfile.birthDate}"
             viewHolder.deleteButton.visibility = View.VISIBLE
 
@@ -77,7 +78,10 @@ class PatientProfileAdapter(
     @SuppressLint("NotifyDataSetChanged")
     fun updateProfiles(newProfiles: List<PatientProfile>) {
         profiles = newProfiles
-        notifyDataSetChanged()
+        //  notifyDataSetChanged()
+        for (i in 0 until profiles.size) { // Проходим по всем элементам
+            notifyItemChanged(i) // Обновляем конкретный элемент
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

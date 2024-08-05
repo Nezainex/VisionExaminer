@@ -9,5 +9,9 @@
     <color name="dayStatusBar">#A28080</color> <!-- White for day theme status bar -->
     <color name="nightStatusBar">#59b6b3</color> <!-- White for day theme status bar -->
     <color name="whiteStatusBar">#e9e9e9</color> <!-- White for day theme status bar -->
+    <color name="red">#fb0000</color><!-- Для кнопок при запрете -->
+    <color name="yellow">#fbe000</color><!-- Для кнопок при предупреждении -->
+    <color name="green">#21fb00</color><!-- Для кнопок при разрешении -->
+
 
 </resources>

@@ -1,5 +1,5 @@
 @file:Suppress("DEPRECATION")
-package com.example.testapp13
+package com.example.VisionExaminer
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
@@ -88,8 +88,8 @@ class SecondActivity : AppCompatActivity(), TextView.OnEditorActionListener, Ada
     @SuppressLint("SetTextI18n")
     private val startNinthForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) { // Проверка результата
-            result.data?.getStringExtra("midriaticAgent")?.let { midriaticAgent ->
-                viewModel.updateMidriaticAgent(midriaticAgent) // Обновление viewModel
+            result.data?.getParcelableExtra<MidriaticResult>("midriaticResult")?.let { midriaticResult ->
+                viewModel.updateMidriaticAgent(midriaticResult.midriaticAgent) // Обновление viewModel
                 midrtextView.text = viewModel.midriaticAgent // Обновление TextView
             }
         }
@@ -199,14 +199,13 @@ class SecondActivity : AppCompatActivity(), TextView.OnEditorActionListener, Ada
         buttonFemale = findViewById(R.id.buttonFemale)
         midriaticButton = findViewById(R.id.midriaticButton)
 
-
         midriaticButton.setOnClickListener {
             val intent = Intent(this, NinthActivity::class.java)
             val isNightMode = intent.getBooleanExtra("isNightMode", true)
             intent.putExtra("isNightMode", isNightMode) // Передача isNightMode в NinthActivity
+            intent.putExtra("age", calculateAgeFromBirthDate()) // Передача возраста
             startNinthForResult.launch(intent) // Запускаем NinthActivity и ожидаем результат
         }
-
 
         // Загрузка данных из ViewModel
         loadViewModelData()
@@ -318,7 +317,6 @@ class SecondActivity : AppCompatActivity(), TextView.OnEditorActionListener, Ada
             updateAgeDescription()
             return@setOnTouchListener true
         }
-
 
         // Обработчики для других кнопок
         val fourthActbutton = findViewById<FrameLayout>(R.id.fourth_act_button)
@@ -490,6 +488,7 @@ class SecondActivity : AppCompatActivity(), TextView.OnEditorActionListener, Ada
         viewModel.updateCylOSLabel(cylOSLabel.text.toString())
         viewModel.updateAxOSLabel(axOSLabel.text.toString())
         viewModel.updateComparesphResult(comparesphtextView.text.toString())
+
 
         val newProfile = PatientProfile(
             birthDate = viewModel.birthDate,
@@ -749,11 +748,11 @@ class SecondActivity : AppCompatActivity(), TextView.OnEditorActionListener, Ada
             if (sph >= -0.74 + correction && sph <= 0.74 + correction) return "$eye эмметропия"
             return when {
                 sph <= -0.75 + correction && sph > -3.25 + correction -> "$eye миопия \n слабой степени"
-                sph <= -3.25 + correction && sph > -6.25 + correction -> "$eye миопия \n средней степени"
-                sph <= -6.25 + correction -> "$eye миопия \n высокой степени"
-                sph >= 0.75 + correction && sph < 2.5 + correction -> "$eye гиперметропия \n слабой степени"
-                sph >= 2.5 + correction && sph < 5 + correction -> "$eye гиперметропия \n средней степени"
-                sph >= 5 + correction -> "$eye гиперметропия \n высокой степени"
+                sph <= -3.25 + correction && sph > -6.00 + correction -> "$eye миопия \n средней степени"
+                sph <= -6.00 + correction -> "$eye миопия \n высокой степени"
+                sph >= 0.75 + correction && sph < 3.25 + correction -> "$eye гиперметропия \n слабой степени"
+                sph >= 3.25 + correction && sph < 6.00 + correction -> "$eye гиперметропия \n средней степени"
+                sph >= 6.00 + correction -> "$eye гиперметропия \n высокой степени"
                 else -> "$eye некорректное \n значение sph"
             }
         }

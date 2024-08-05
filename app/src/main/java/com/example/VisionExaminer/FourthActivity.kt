@@ -1,4 +1,4 @@
-package com.example.testapp13
+package com.example.VisionExaminer
 
 import android.annotation.SuppressLint
 import android.content.Intent

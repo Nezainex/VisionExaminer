@@ -1,4 +1,4 @@
-package com.example.testapp13
+package com.example.VisionExaminer
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -37,7 +37,17 @@ interface PatientProfileDao {
 
     @Query("SELECT * FROM ishihara_results WHERE patientProfileId = :profileId")
     fun getishiharaResultsForProfile(profileId: Int): Flow<List<IshiharaResult>> // Возвращаем Flow<List<ishiharaResult>>
+
+    //  !!!  Новые методы для мидриатика !!!
+
+    @Insert
+    suspend fun insertMidriaticResult(result: MidriaticResult)
+
+    @Query("SELECT * FROM midriatic_results WHERE patientProfileId = :profileId")
+    fun getMidriaticResultsForProfile(profileId: Int): Flow<List<MidriaticResult>>
 }
+
+
 
 
 

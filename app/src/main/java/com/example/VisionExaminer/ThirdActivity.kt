@@ -1,4 +1,4 @@
-package com.example.testapp13
+package com.example.VisionExaminer
 
 import android.annotation.SuppressLint
 import android.os.Build
@@ -51,7 +51,6 @@ class ThirdActivity : AppCompatActivity() {
         val textViewAgeCalc: TextView = findViewById(R.id.textViewAgeCalcTA)
         val examinationdateTextViewTA: TextView = findViewById(R.id.examinationdateTextViewTA)
         val birthDateTextViewTA: TextView = findViewById(R.id.birthDateTextViewTA)
-
 
         val visODtextViewTA: TextView = findViewById(R.id.visODtextViewTA)
         val visOStextViewTA: TextView = findViewById(R.id.visOStextViewTA)
@@ -262,6 +261,17 @@ class ThirdActivity : AppCompatActivity() {
                     ishiharaResultTextView.text = "Результат ishihara: ${ishiharaResult.resultText} (Баллы: ${ishiharaResult.score})"
                 } else {
                     ishiharaResultTextView.text = "Результаты ishihara отсутствуют"
+                }
+            }
+
+            lifecycleScope.launch {
+                val database = DatabaseInstance.getInstance(this@ThirdActivity)
+                val midriaticResults = database.patientProfileDao().getMidriaticResultsForProfile(profile.id).first()
+                if (midriaticResults.isNotEmpty()) {
+                    val midriaticResult = midriaticResults[0]
+                    midrtextViewTA.text = "Результат мидриатика: ${midriaticResult.midriaticAgent}"
+                } else {
+                    midrtextViewTA.text = "Результат мидриатика отсутствует"
                 }
             }
         }
